@@ -1,0 +1,17 @@
+!! IMPORANTE !!
+Tratar el array siempre con ${...}
+
+-- Declarar Array --
+Array=()
+
+-- Agregar elemento --
+Array+=('Elemento')
+
+-- Sacar un índice --
+Array[índice]
+
+-- Sacar todo el array --
+${Array[@]}
+
+-- Longitud del array --
+${#Array[@]}
