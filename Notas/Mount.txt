@@ -1,0 +1,13 @@
+-- AVISO --
+[ . . . ] => substituir valor!!
+
+
+Sintaxis para montar una partición
+
+ · mount -t [Filesystem] (ej: ext4) [Partición] (ej: /dev/sdb1) [Destino] (Tiene que existir)
+
+Recoger filesystem con:
+ 
+ · lsblk -f [Disco] | grep "[Disco]" | cut -d" " -f2
+
+Recoger ruta mediante un input de YAD 
