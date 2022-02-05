@@ -16,7 +16,7 @@ function discosConectados(){
 }
 
 function obtenerParticiones() {
-    ls ${discoSelecionado}?* > particiones #Únicamente recoge las particiones
+    ls $1?* > particiones #Únicamente recoge las particiones
     totalParticiones=`wc -l particiones | cut -d" " -f1` #contar la cantidad de particiones
     
     i=1 #Se necesita inicializar en 1 para que el head funcione correctamente
@@ -32,7 +32,7 @@ function obtenerParticiones() {
 }
 
 function ventanaMontarDiscoFormulario() {
-    listaParticiones=`obtenerParticiones` #Actualiza el array con las particiones del disco selecionado (no retornarlo para poder utilizar los índices)
+    listaParticiones=`obtenerParticiones $1` #Actualiza el array con las particiones del disco selecionado (no retornarlo para poder utilizar los índices)
     #echo $listaParticiones
     #formatearStringYAD ${listaParticiones}
     strParticiones=`formatearStringYAD ${listaParticiones}`
@@ -67,9 +67,9 @@ function ventanaSelecionarDisco() {
     
         IFS="|" read -r -a array <<< "$seleccion" #Recoger los datos y guardarlos en un array
 
-        discoSelecionado=${array[0]}
+        echo ${array[0]}
     else
-        discoSelecionado="return"
+        echo "return"
     fi
 
 }

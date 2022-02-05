@@ -11,6 +11,16 @@ function montarDisco() {
     if [ $? -eq 0 ]
         then
             echo "Montaje correcto"
+            texto="¡La partición se ha montado correctamente!"
+            yad --title="Montaje Correcto" \
+            --image=gtk-info \
+            --width=250 \
+            --height=80 \
+            --button=Continuar:0 \
+            --center \
+            --text-align=center \
+            --text="${texto}"
+
             menuGestionarDisco
         else
             echo "No se ha podido montar"
@@ -39,16 +49,20 @@ function menuGestionarDisco(){
         opcion=${opcion::-1} #Quita el | del final
         case $opcion in
                 "Montar Disco")
-                        ventanaSelecionarDisco #Función que devolverá "discoSelecionado"
-
-                        if [ ${discoSelecionado} != "return" ]
+                        discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
+                        if [ ${discoSelecionado} != "return" ] #Se ha selecionado un disco
                             then
-                                formulario=`ventanaMontarDiscoFormulario`
+                                formulario=`ventanaMontarDiscoFormulario $discoSelecionado`
                                 
-                                IFS="|" read -r -a datos <<< "$formulario" #recoger los datos
-                                #echo "Partición: ${datos[0]}"
-                                #echo "Punto de montaje: ${datos[1]}"
-                                montarDisco ${datos[0]} ${datos[1]}
+                                if [ $? -eq 0 ] #El usuario no ha cerrado el formulario
+                                    then
+                                        IFS="|" read -r -a datos <<< "$formulario" #recoger los datos
+                                        #echo "Partición: ${datos[0]}"
+                                        #echo "Punto de montaje: ${datos[1]}"
+                                        montarDisco ${datos[0]} ${datos[1]}
+                                    else
+                                        menuGestionarDisco
+                                fi
                             else
                                 ./menu.sh
                         fi
