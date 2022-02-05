@@ -5,6 +5,7 @@ opcion=$(yad --list \
                  --button=Salir:1 \
                  --button=Seleccionar:0 \
                  --center \
+                 --buttons-layout=spread \
                  --text="MENU PRINCIPAL" \
                  --tree \
                  --column="Selecciona una opción:" \
@@ -12,22 +13,23 @@ opcion=$(yad --list \
 ans=$?
 if [ $ans -eq 0 ]
 then
+    opcion=${opcion::-1} #Quita el | del final
     case $opcion in
     #NO SE PORQUE SE AÑADE UNA " | " EN $OPCION
     #CAMBIAR ECHOS POR LOS NOMBRES DEL LOS SCRIPTS
-            "Gestionar disco|")
-                echo "Gestionar"
+            "Gestionar disco")
+                ./gestionDisco.sh
                 ;;
-            "Formatear y Particionar|")
+            "Formatear y Particionar")
                 echo "Formatear"
                 ;;
-            "Estado de discos|")
+            "Estado de discos")
                 echo "Estado"
                 ;;
-            "Estadísticas de uso|")
+            "Estadísticas de uso")
                 echo "Estadísticas"
                 ;;
-            "Ayuda|")
+            "Ayuda")
                 echo "Ayuda"
                 ;;
             *)
