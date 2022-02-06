@@ -6,6 +6,7 @@ opcion=$(yad --list \
                  --button=Seleccionar:0 \
                  --center \
                  --buttons-layout=spread \
+                 --text-align=center \
                  --text="MENU PRINCIPAL" \
                  --tree \
                  --column="Selecciona una opción:" \
@@ -21,7 +22,7 @@ then
                 ./gestionDisco.sh
                 ;;
             "Formatear y Particionar")
-                echo "Formatear"
+                ./formParticion.sh
                 ;;
             "Estado de discos")
                 echo "Estado"

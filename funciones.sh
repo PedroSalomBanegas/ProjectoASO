@@ -89,3 +89,15 @@ function formatearStringYAD(){
         echo ${stringConvertida}
         stringConvertida=""
 }
+
+function añadirParticion() {
+    nombrePar=$1
+    tamano=$2
+    if [ $3 = "Primaria" ]
+        then
+            tipo="p"
+        else
+            tipo="e"
+        fi
+    echo "o\nn\n${tipo}\n3\n\\${tamano}\nw" | fdisk ${nombrePar}
+}
