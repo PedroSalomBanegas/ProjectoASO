@@ -99,5 +99,5 @@ function añadirParticion() {
         else
             tipo="e"
         fi
-    echo "o\nn\n${tipo}\n3\n\\${tamano}\nw" | fdisk ${nombrePar}
+    echo -e "n\n${tipo}\n3\n\n+${tamano}\nw\n" | fdisk ${nombrePar}
 }
