@@ -91,6 +91,7 @@ function formatearStringYAD(){
 }
 
 function añadirParticion() {
+    #Author: Jaime
     nombrePar=$1
     tamano=$2
     if [ $3 = "Primaria" ]
@@ -100,4 +101,34 @@ function añadirParticion() {
             tipo="e"
         fi
     echo -e "n\n${tipo}\n3\n\n+${tamano}\nw\n" | fdisk ${nombrePar}
+}
+
+function eliminarParticion() {
+    #Author: Jaime
+    string=$*
+    long=${#string} #recojo la longitud
+    echo $*
+    #pos=`expr index "$string" "|"` #posicion del separador
+    #let pos=pos+1
+    #echo `expr substr "$string" $pos $long`
+    pos=`expr index "$string" "|"`
+    echo $pos
+    echo $long
+    while [ $pos -ne $long ]
+        do
+        pos=`expr index "$string" "|"` #posicion del separador
+        let pos=pos+1 
+        nuevoString=`expr substr "$string" $pos $long`
+        #guardo la particion
+        posGuardar=`expr index "$nuevoString" "|"`
+        let posGuardar=posGuardar-1
+        particion=`expr substr "$nuevoString" 1 $posGuardar`
+        echo $particion
+        #ejecutar borrado $particion
+        string=$nuevoString
+        echo $string
+        #freno
+        pos=$long
+        done
+
 }

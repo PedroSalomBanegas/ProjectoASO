@@ -18,7 +18,7 @@ opcion=$(yad --list \
                  --text="Formatear y Particionar" \
                  --tree \
                  --column="Selecciona una opción:" \
-                    "Particionar" "Formatear" "Modificar partición" )
+                    "Particionar" "Formatear" "Eliminar Particion DEMO" )
 ans=$?
 if [ $ans -eq 0 ]
 then
@@ -74,9 +74,27 @@ then
                     echo "nada"
                 fi
                 ;;   
-            "Modificar partición")
-                
-                ;;
+            "Eliminar Particion DEMO")
+                eliminar=$(yad --list \
+                --title="MENU" \
+                --height=200 \
+                --width=250 \
+                --center \
+                --button=Salir:1 \
+                --button=Seleccionar:0 \
+                --text="Selecciona particiones a eliminar:" \
+                --checklist \
+                --column="" \
+                --column="Partciciones del sistema" \
+                1 "/dev/sdb1" 2 "/dev/sdb2" )
+                ans=$?
+                if [ $ans -eq 0 ]
+                then  
+                    eliminarParticion ${eliminar}
+                else
+                    echo "nada"
+                fi
+                ;; 
             *)
                 echo "Unexpected"
                 ;;
