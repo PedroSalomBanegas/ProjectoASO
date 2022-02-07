@@ -5,6 +5,8 @@ function montarDisco() {
     local fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
     local rutaParticion=$1
     local montaje=$2
+    local fecha=`date +%d/%m/%Y`
+    
 
     sudo mount -t $fileSystem $rutaParticion $montaje
 
@@ -21,21 +23,23 @@ function montarDisco() {
             --text-align=center \
             --text="${texto}"
 
+            echo "Montar:${nombreParticion}:${montaje}:${fecha}" >> gestorDisco.log
             menuGestionarDisco
         else
             echo "No se ha podido montar"
+            echo "Error montar:${nombreParticion}:${montaje}:${fecha}" >> gestorDisco.log
             menuGestionarDisco
     fi 
 }
 
 function desmontarDisco() {
     local rutaParticion=$1
+    local fecha=`date +%d/%m/%Y`
 
     sudo umount ${rutaParticion}
 
     if [ $? -eq 0 ]
         then
-            echo "Desmontaje Correcto"
             texto="¡Se ha desmontado la partición correctamente!"
             yad --title="Desmontaje Correcto" \
             --image=gtk-info \
@@ -46,9 +50,12 @@ function desmontarDisco() {
             --text-align=center \
             --text="${texto}"
 
+            local fecha=`date +%d/%m/%Y`
+            echo "Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log
+
             menuGestionarDisco
         else
-            echo "Error al desmontar"
+            echo "Error montar:${rutaParticion}:${fecha}" >> gestorDisco.log
             menuGestionarDisco
     fi 
 }
@@ -56,7 +63,6 @@ function desmontarDisco() {
 function ventanaSelecionarParticion() {
     local particiones=`obtenerParticiones $1`
     local strParticiones=`formatearStringListaYAD $particiones`
-    echo $strParticiones
 
     seleccion=$(yad --list \
                  --title="MENU" \
@@ -67,7 +73,7 @@ function ventanaSelecionarParticion() {
                  --center \
                  --buttons-layout=spread \
                  --text-align=center \
-                 --text="Formatear y Particionar" \
+                 --text="Partición a desmontar" \
                  --tree \
                  --column="Selecciona una opción:" \
                     ${strParticiones})
@@ -113,8 +119,6 @@ function menuGestionarDisco(){
                                 if [ $? -eq 0 ] #El usuario no ha cerrado el formulario
                                     then
                                         IFS="|" read -r -a datos <<< "$formulario" #recoger los datos
-                                        #echo "Partición: ${datos[0]}"
-                                        #echo "Punto de montaje: ${datos[1]}"
                                         montarDisco ${datos[0]} ${datos[1]}
                                     else
                                         menuGestionarDisco
@@ -128,10 +132,9 @@ function menuGestionarDisco(){
 
                         if [ ${discoSelecionado} != "return" ]
                             then
-                                #particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
-                                ventanaSelecionarParticion $discoSelecionado 
+                                particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
 
-                                if [ $particionSelecionada != "return" ]
+                                if [ $particionSelecionada != "return" ] #Se ha selecionado una partición
                                     then
                                         desmontarDisco $particionSelecionada
                                     else
@@ -143,6 +146,7 @@ function menuGestionarDisco(){
                     ;;
                 "Automontaje")
                     echo "Automontaje"
+                    menuGestionarDisco
                     ;;
                 *)
                     echo "Unexpected"
@@ -153,5 +157,4 @@ function menuGestionarDisco(){
     fi
 }
 
-menuGestionarDisco
-#ventanaSelecionarDisco #Invocar interfaz
+menuGestionarDisco #Invocar interfaz
