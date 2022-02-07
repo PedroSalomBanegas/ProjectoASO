@@ -107,14 +107,9 @@ function eliminarParticion() {
     #Author: Jaime
     string=$*
     long=${#string} #recojo la longitud
-    echo $*
-    #pos=`expr index "$string" "|"` #posicion del separador
-    #let pos=pos+1
-    #echo `expr substr "$string" $pos $long`
+    #echo $*
     pos=`expr index "$string" "|"`
-    echo $pos
-    echo $long
-    while [ $pos -ne $long ]
+    while [ 0 -ne $long ]
         do
         pos=`expr index "$string" "|"` #posicion del separador
         let pos=pos+1 
@@ -123,12 +118,13 @@ function eliminarParticion() {
         posGuardar=`expr index "$nuevoString" "|"`
         let posGuardar=posGuardar-1
         particion=`expr substr "$nuevoString" 1 $posGuardar`
-        echo $particion
-        #ejecutar borrado $particion
+        if [ $particion != "TRUE" ]
+            then
+                device=${particion::-1}
+                posNum=${particion: -1}
+                echo -e "d\n${posnum}\nw\n" | fdisk $device
+            fi
         string=$nuevoString
-        echo $string
-        #freno
-        pos=$long
+        long=${#string}
         done
-
 }

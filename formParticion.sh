@@ -86,7 +86,7 @@ then
                 --checklist \
                 --column="" \
                 --column="Partciciones del sistema" \
-                1 "/dev/sdb1" 2 "/dev/sdb2" )
+                1 "/dev/sdb1" 2 "/dev/sdb2" 3 "/dev/sdb3" )
                 ans=$?
                 if [ $ans -eq 0 ]
                 then  
