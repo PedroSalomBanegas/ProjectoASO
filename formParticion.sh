@@ -1,4 +1,7 @@
 . funciones.sh
+function checklist() {
+    obtenerParticiones /dev/sd?
+}
 
 function mkfsBetter () {
     formato=$1
@@ -18,15 +21,15 @@ opcion=$(yad --list \
                  --text="Formatear y Particionar" \
                  --tree \
                  --column="Selecciona una opción:" \
-                    "Particionar" "Formatear" "Eliminar Particion DEMO" )
+                    "Añadir Particion" "Eliminar Particion" "Formatear" )
 ans=$?
 if [ $ans -eq 0 ]
 then
-    lista=`obtenerParticiones /dev/sd`
+    lista=`discosConectados`
     listaYAD=`formatearStringYAD $lista`
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
-            "Particionar")
+            "Añadir Particion")
                 part=$(yad --form \
                 --height=220 \
                 --width=150 \
@@ -51,6 +54,28 @@ then
                     echo "Has salido"
                 fi
                 ;;
+            "Eliminar Particion")
+                eliminar=$(yad --list \
+                --title="MENU" \
+                --height=200 \
+                --width=250 \
+                --center \
+                --button=Salir:1 \
+                --button=Seleccionar:0 \
+                --text="Selecciona particiones a eliminar:" \
+                --checklist \
+                --column="" \
+                --column="Partciciones del sistema" \
+                1 "/dev/sdb1" 2 "/dev/sdb2" 3 "/dev/sdb3" )
+                ans=$?
+                if [ $ans -eq 0 ]
+                then  
+                    eliminarParticion ${eliminar}
+                else
+                    checklist
+                    echo "nada"
+                fi
+                ;; 
             "Formatear")
                 formateo=$(yad --form \
                 --height=220 \
@@ -74,29 +99,10 @@ then
                     echo "nada"
                 fi
                 ;;   
-            "Eliminar Particion DEMO")
-                eliminar=$(yad --list \
-                --title="MENU" \
-                --height=200 \
-                --width=250 \
-                --center \
-                --button=Salir:1 \
-                --button=Seleccionar:0 \
-                --text="Selecciona particiones a eliminar:" \
-                --checklist \
-                --column="" \
-                --column="Partciciones del sistema" \
-                1 "/dev/sdb1" 2 "/dev/sdb2" 3 "/dev/sdb3" )
-                ans=$?
-                if [ $ans -eq 0 ]
-                then  
-                    eliminarParticion ${eliminar}
-                else
-                    echo "nada"
-                fi
-                ;; 
             *)
                 echo "Unexpected"
                 ;;
     esac
+    else
+    ./menu.sh
 fi
