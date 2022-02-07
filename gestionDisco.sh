@@ -28,6 +28,56 @@ function montarDisco() {
     fi 
 }
 
+function desmontarDisco() {
+    local rutaParticion=$1
+
+    sudo umount ${rutaParticion}
+
+    if [ $? -eq 0 ]
+        then
+            echo "Desmontaje Correcto"
+            texto="¡Se ha desmontado la partición correctamente!"
+            yad --title="Desmontaje Correcto" \
+            --image=gtk-info \
+            --width=250 \
+            --height=80 \
+            --button=Continuar:0 \
+            --center \
+            --text-align=center \
+            --text="${texto}"
+
+            menuGestionarDisco
+        else
+            echo "Error al desmontar"
+            menuGestionarDisco
+    fi 
+}
+
+function ventanaSelecionarParticion() {
+    local particiones=`obtenerParticiones $1`
+    local strParticiones=`formatearStringYAD $particiones`
+
+    seleccion=$(yad --form \
+        --title="Desmontar partición" \
+        --text="Seleciona la partición a desmontar " \
+        --button=Volver:1 \
+        --button=Seleccionar:0 \
+        --center \
+        --buttons-layout=spread \
+        --field="Disponibles: ":CB "$strParticiones")
+
+    ans=$? #respuesta del usuario
+    if [ $ans -eq 0 ]
+    then
+    
+        IFS="|" read -r -a array <<< "$seleccion" #Recoger los datos y guardarlos en un array
+
+        echo ${array[0]}
+    else
+        echo "return"
+    fi
+}
+
 function menuGestionarDisco(){
     opcion=$(yad --list \
                     --title="MENU" \
@@ -68,7 +118,21 @@ function menuGestionarDisco(){
                         fi
                     ;;
                 "Desmontar")
-                    echo "Desmontar"
+                        discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
+
+                        if [ ${discoSelecionado} != "return" ]
+                            then
+                                particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
+
+                                if [ $particionSelecionada != "return" ]
+                                    then
+                                        desmontarDisco $particionSelecionada
+                                    else
+                                        menuGestionarDisco
+                                fi
+                            else
+                                ./menu.sh
+                        fi
                     ;;
                 "Automontaje")
                     echo "Automontaje"
