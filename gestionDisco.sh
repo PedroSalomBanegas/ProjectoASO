@@ -55,16 +55,22 @@ function desmontarDisco() {
 
 function ventanaSelecionarParticion() {
     local particiones=`obtenerParticiones $1`
-    local strParticiones=`formatearStringYAD $particiones`
+    local strParticiones=`formatearStringListaYAD $particiones`
+    echo $strParticiones
 
-    seleccion=$(yad --form \
-        --title="Desmontar partición" \
-        --text="Seleciona la partición a desmontar " \
-        --button=Volver:1 \
-        --button=Seleccionar:0 \
-        --center \
-        --buttons-layout=spread \
-        --field="Disponibles: ":CB "$strParticiones")
+    seleccion=$(yad --list \
+                 --title="MENU" \
+                 --height=220 \
+                 --width=150 \
+                 --button=Salir:1 \
+                 --button=Seleccionar:0 \
+                 --center \
+                 --buttons-layout=spread \
+                 --text-align=center \
+                 --text="Formatear y Particionar" \
+                 --tree \
+                 --column="Selecciona una opción:" \
+                    ${strParticiones})
 
     ans=$? #respuesta del usuario
     if [ $ans -eq 0 ]
@@ -122,7 +128,8 @@ function menuGestionarDisco(){
 
                         if [ ${discoSelecionado} != "return" ]
                             then
-                                particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
+                                #particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
+                                ventanaSelecionarParticion $discoSelecionado 
 
                                 if [ $particionSelecionada != "return" ]
                                     then

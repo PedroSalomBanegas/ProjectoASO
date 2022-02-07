@@ -90,6 +90,22 @@ function formatearStringYAD(){
         stringConvertida=""
 }
 
+function formatearStringListaYAD() {
+    local array=($@) #Recoger un array desde un parámetro
+    for str in ${array[@]}
+        do
+            #echo $stringConvertidaLista
+            if [ -z "${stringConvertidaLista}" ]
+                then
+                    stringConvertidaLista="$str"
+                else
+                    stringConvertidaLista="${stringConvertidaLista} $str"
+            fi
+        done
+        echo ${stringConvertidaLista}
+        stringConvertidaLista=""
+}
+
 function añadirParticion() {
     #Author: Jaime
     nombrePar=$1
@@ -100,7 +116,7 @@ function añadirParticion() {
         else
             tipo="e"
         fi
-    echo -e "n\n${tipo}\n3\n\n+${tamano}\nw\n" | fdisk ${nombrePar}
+    echo -e "n\n${tipo}\n\n\n+${tamano}\nw\n" | fdisk ${nombrePar}
 }
 
 function eliminarParticion() {
@@ -122,7 +138,7 @@ function eliminarParticion() {
             then
                 device=${particion::-1}
                 posNum=${particion: -1}
-                echo -e "d\n${posnum}\nw\n" | fdisk $device
+                echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
             fi
         string=$nuevoString
         long=${#string}
