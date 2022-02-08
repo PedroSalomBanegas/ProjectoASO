@@ -18,6 +18,8 @@ if [ $ans -eq 0 ]
 then
     lista=`discosConectados`
     listaYAD=`formatearStringYAD $lista`
+    listaMKFS=`obtenerParticiones /dev/sd\?`
+    yadMKFS=`formatearStringYAD $listaMKFS`
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
             "Añadir Particion")
@@ -78,12 +80,12 @@ then
                 --field="Formato":CB \
                 'ext3!ext4'\
                 --field="Partición a formatear":CB \
-                ${listaYAD} )
+                ${yadMKFS} )
                 ans=$?
                 if [ $ans -eq 0 ]
                 then  
                     echo ${formateo} > test.txt 
-                    seleccion=`sed 's/|/ /g' test.txt`
+                    seleccion=`sed 's/|/ /g' test.txt` #intercambia | por " "
                     mkfsBetter $seleccion
                     rm test.txt
                 else
