@@ -16,6 +16,7 @@ function discosConectados(){
 }
 
 function obtenerParticiones() {
+    #Autor: Pedro
     ls $1?* > particiones #Únicamente recoge las particiones
     totalParticiones=`wc -l particiones | cut -d" " -f1` #contar la cantidad de particiones
     
@@ -93,14 +94,14 @@ function formatearStringYAD(){
 }
 
 function formatearStringListaYAD() {
-    #Autor: Pedro
-    local array=($@) #Recoger un array desde un parámetro
+    #Autor: Jaime
+    array=($@) #Recoger un array desde un parámetro
     for str in ${array[@]}
         do
             #echo $stringConvertidaLista
             if [ -z "${stringConvertidaLista}" ]
                 then
-                    stringConvertidaLista="$str"
+                    stringConvertidaLista="$str" #se crea la variable
                 else
                     stringConvertidaLista="${stringConvertidaLista} $str"
             fi
@@ -123,7 +124,7 @@ function añadirParticion() {
 }
 
 function eliminarParticion() {
-    #Author: Jaime
+    #Autor: Jaime
     string=$*
     long=${#string} #recojo la longitud
     #echo $*
@@ -146,4 +147,25 @@ function eliminarParticion() {
         string=$nuevoString
         long=${#string}
         done
+}
+
+function checklist() {
+    #Autor: Jaime
+    #No implementado
+    string=`obtenerParticiones /dev/sd\?`
+    cont=1
+    prueba=`echo "$string" | cut -d" " -f${cont}`
+    while [ "$prueba" != "" ]
+        do
+            let cont=cont+1
+            prueba=`echo "$string" | cut -d" " -f${cont}`
+            echo $prueba
+        done
+}
+
+function mkfsBetter () {
+    #Autor: Jaime
+    formato=$1
+    particion=$2
+    mkfs.$1 $2
 }
