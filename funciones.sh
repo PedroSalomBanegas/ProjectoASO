@@ -120,12 +120,13 @@ function añadirParticion() {
         else
             tipo="e"
         fi
-    echo -e "n\n${tipo}\n\n\n+${tamano}\nw\n" | fdisk ${nombrePar}
+    echo -e "n\n${tipo}\n\n\n+${tamano}\nw\n" | sudo fdisk ${nombrePar}
 }
 
 function eliminarParticion() {
     #Autor: Jaime
     string=$*
+    fecha=`date +%d/%m/%Y`
     long=${#string} #recojo la longitud
     #echo $*
     pos=`expr index "$string" "|"`
@@ -140,6 +141,7 @@ function eliminarParticion() {
         particion=`expr substr "$nuevoString" 1 $posGuardar`
         if [ $particion != "TRUE" ]
             then
+                echo "EliminarParticion:${particion}:${fecha}" >> formParticion.log
                 device=${particion::-1}
                 posNum=${particion: -1}
                 echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
@@ -157,10 +159,17 @@ function checklist() {
     prueba=`echo "$string" | cut -d" " -f${cont}`
     while [ "$prueba" != "" ]
         do
-            let cont=cont+1
+            
+            if [ -z "$stringTotal" ]
+                then
+                    stringTotal="$cont $prueba"
+                else
+                    stringTotal="$stringTotal $cont $prueba"
+                fi
+                let cont=cont+1
             prueba=`echo "$string" | cut -d" " -f${cont}`
-            echo $prueba
         done
+        echo $stringTotal
 }
 
 function mkfsBetter () {

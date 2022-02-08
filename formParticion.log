@@ -1,0 +1,14 @@
+#accion:disco:fechaAñadirParticion::08/02/2022
+AñadirParticion:/dev/sdb:08/02/2022
+AñadirParticion:/dev/sda:08/02/2022
+AñadirParticion:/dev/sdb:08/02/2022
+AñadirParticion:/dev/sdb:08/02/2022
+AñadirParticion:/dev/sdb:08/02/2022
+AñadirParticion:/dev/sda:08/02/2022
+AñadirParticion:/dev/sda:08/02/2022
+AñadirParticion:/dev/sdb:08/02/2022
+EliminarParticion:/dev/sdb2:08/022022
+AñadirParticion:/dev/sdb:08/02/2022
+EliminarParticion:/dev/sdb2:08/02/2022
+AñadirParticion:/dev/sdb:08/02/2022
+Formateo:ext4,/dev/sdb2:08/02/2022

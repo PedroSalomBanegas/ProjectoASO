@@ -20,6 +20,7 @@ then
     listaYAD=`formatearStringYAD $lista`
     listaMKFS=`obtenerParticiones /dev/sd\?`
     yadMKFS=`formatearStringYAD $listaMKFS`
+    listaCheck=`checklist`
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
             "Añadir Particion")
@@ -33,7 +34,7 @@ then
                 --field="Particiones":CB \
                 ${listaYAD} \
                 --field="Tamaño MB":CB \
-                '10000!20000!30000' \
+                '1000!2000!3000' \
                 --field="Tipo":CB \
                 'Primaria!Extendida' )
                 ans=$?
@@ -43,8 +44,11 @@ then
                     seleccion=`sed 's/|/ /g' test.txt`
                     añadirParticion $seleccion
                     rm test.txt
-                else
-                    echo "Has salido"
+                    disco=`echo "$seleccion" | cut -d" " -f1` 
+                    fecha=`date +%d/%m/%Y`
+                    echo "AñadirParticion:${disco}:${fecha}" >> formParticion.log
+                else 
+                    ./formParticion.sh
                 fi
                 ;;
             "Eliminar Particion")
@@ -58,15 +62,15 @@ then
                 --text="Selecciona particiones a eliminar:" \
                 --checklist \
                 --column="" \
-                --column="Partciciones del sistema" \
-                1 "/dev/sdb1" 2 "/dev/sdb2" 3 "/dev/sdb3" )
+                --column="Particiones del sistema" \
+                $listaCheck )
                 ans=$?
                 if [ $ans -eq 0 ]
                 then  
                     eliminarParticion ${eliminar}
                 else
-                    checklist
-                    echo "nada"
+                   
+                    ./formParticion.sh
                 fi
                 ;; 
             "Formatear")
@@ -77,7 +81,7 @@ then
                 --button=Seleccionar:0 \
                 --title="MENU" \
                 --center \
-                --field="Formato":CB \
+                --field="File System":CB \
                 'ext3!ext4'\
                 --field="Partición a formatear":CB \
                 ${yadMKFS} )
@@ -88,8 +92,12 @@ then
                     seleccion=`sed 's/|/ /g' test.txt` #intercambia | por " "
                     mkfsBetter $seleccion
                     rm test.txt
+                    fileSys=`echo "$seleccion" | cut -d" " -f1` 
+                    par=`echo "$seleccion" | cut -d" " -f2` 
+                    fecha=`date +%d/%m/%Y`
+                    echo "Formateo:${fileSys},${par}:${fecha}" >> formParticion.log
                 else
-                    echo "nada"
+                    ./formParticion.sh
                 fi
                 ;;   
             *)
