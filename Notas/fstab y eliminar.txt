@@ -1,0 +1,11 @@
+-- Añadir entrada FSTAB --
+<ruta completa partición> <Punto de montaje> <Sistema de ficheros> <"defaults"> <0> <3>
+
+    - EJ: /dev/sdb1 /mnt ext4 defaults 0
+
+-- Eliminar entrada específica --
+Nota: Si no se elimina la entrada del fstab cuando se borra una partición el sistema operativo posiblemente no arranque
+
+sed '/particion/' ./fstab
+
+    - EJ: sed '/sdb1/d' ./backup
