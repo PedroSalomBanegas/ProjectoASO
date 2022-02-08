@@ -1,6 +1,40 @@
 . funciones.sh
 function checklist() {
-    obtenerParticiones /dev/sd?
+    string=`obtenerParticiones /dev/sd\?`
+    cont=0
+    stringTotal=""
+    long=${#string}
+
+    #while [ 5 -lt $long ]
+    #do
+    let cont=cont+1
+    echo $string
+    pos=`expr index "$string" " "` 
+    stringGuardar=`expr substr "$string" 1 $pos`
+    echo $pos
+    echo $stringGuardar
+    nuevoString=`expr substr "$string" $pos $long`
+    
+    stringTotal="${stringTotal} ${cont} ${stringGuardar}"
+    string=$nuevoString
+    long=${#string}
+    #done
+
+    #VUELTA 2
+    let cont=cont+1
+    echo $string
+    pos=`expr index "$string" " "` 
+    stringGuardar=`expr substr "$string" 1 $pos`
+    echo $pos
+    echo $stringGuardar
+    nuevoString=`expr substr "$string" $pos $long`
+    stringTotal="${stringTotal} ${cont} ${stringGuardar}"
+    string=$nuevoString
+    long=${#string}
+    #echo $stringTotal
+    #echo $string
+    #echo $long
+
 }
 
 function mkfsBetter () {
