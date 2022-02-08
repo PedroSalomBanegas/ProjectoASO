@@ -32,6 +32,7 @@ function obtenerParticiones() {
 }
 
 function ventanaMontarDiscoFormulario() {
+    #Autor: Pedro
     listaParticiones=`obtenerParticiones $1` #Actualiza el array con las particiones del disco selecionado (no retornarlo para poder utilizar los índices)
     #echo $listaParticiones
     #formatearStringYAD ${listaParticiones}
@@ -75,6 +76,7 @@ function ventanaSelecionarDisco() {
 }
 
 function formatearStringYAD(){
+    #Autor: Pedro
     local array=($@) #Recoger un array desde un parámetro
     #echo ${array[@]}
     for str in "${array[@]}" #Formatear el array en una string aceptada por YAD
@@ -91,6 +93,7 @@ function formatearStringYAD(){
 }
 
 function formatearStringListaYAD() {
+    #Autor: Pedro
     local array=($@) #Recoger un array desde un parámetro
     for str in ${array[@]}
         do
@@ -107,7 +110,7 @@ function formatearStringListaYAD() {
 }
 
 function añadirParticion() {
-    #Author: Jaime
+    #Autor: Jaime
     nombrePar=$1
     tamano=$2
     if [ $3 = "Primaria" ]
