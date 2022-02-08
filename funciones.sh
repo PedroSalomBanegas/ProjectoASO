@@ -176,5 +176,5 @@ function mkfsBetter () {
     #Autor: Jaime
     formato=$1
     particion=$2
-    mkfs.$1 $2
+    sudo mkfs.$1 $2
 }

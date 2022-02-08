@@ -12,3 +12,6 @@ AñadirParticion:/dev/sdb:08/02/2022
 EliminarParticion:/dev/sdb2:08/02/2022
 AñadirParticion:/dev/sdb:08/02/2022
 Formateo:ext4,/dev/sdb2:08/02/2022
+Formateo:ext4,/dev/sdb2:08/02/2022
+Formateo:ext4,/dev/sdb2:08/02/2022
+Formateo:ext3,/dev/sdb2:08/02/2022
