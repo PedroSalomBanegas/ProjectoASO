@@ -66,6 +66,8 @@ function automontar() {
     local rutaMontaje=$2
 
     echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab
+    
+    # -- Crear entrada en los logs y comprobar existencia en fstab (si existe no se escribe sobre el fstab)-- 
 }
 
 function ventanaSelecionarParticion() {
@@ -141,7 +143,6 @@ function menuGestionarDisco(){
                         if [ ${discoSelecionado} != "return" ]
                             then
                                 particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
-                                echo $particionSelecionada
 
                                 if [ $particionSelecionada != "return" ] #Se ha selecionado una partición
                                     then
@@ -158,8 +159,8 @@ function menuGestionarDisco(){
                         local strParticiones=`formatearStringYAD $particionesDisponibles`
 
                         local seleccion=$(yad --form \
-                                        --title="Formulario Montar partición" \
-                                        --text="¿Qué partición quieres montar?" \
+                                        --title="Formulario automontaje" \
+                                        --text="¿Qué partición quieres que se monte automáticamente?" \
                                         --center \
                                         --buttons-layout=spread \
                                         --field="Partición: ":CB \
