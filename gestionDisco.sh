@@ -7,7 +7,6 @@ function montarDisco() {
     local montaje=$2
     local fecha=`date +%d/%m/%Y`
     
-
     sudo mount -t $fileSystem $rutaParticion $montaje
 
     if [ $? -eq 0 ]
@@ -58,6 +57,15 @@ function desmontarDisco() {
             echo "Error montar:${rutaParticion}:${fecha}" >> gestorDisco.log
             menuGestionarDisco
     fi 
+}
+
+function automontar() {
+    local rutaParticion=$1
+    local nombreParticion=`echo $1 | cut -d"/" -f3`
+    local fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
+    local rutaMontaje=$2
+
+    echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab
 }
 
 function ventanaSelecionarParticion() {
@@ -133,6 +141,7 @@ function menuGestionarDisco(){
                         if [ ${discoSelecionado} != "return" ]
                             then
                                 particionSelecionada=`ventanaSelecionarParticion $discoSelecionado`
+                                echo $particionSelecionada
 
                                 if [ $particionSelecionada != "return" ] #Se ha selecionado una partición
                                     then
@@ -145,8 +154,30 @@ function menuGestionarDisco(){
                         fi
                     ;;
                 "Automontaje")
-                    echo "Automontaje"
-                    menuGestionarDisco
+                        local particionesDisponibles=`obtenerParticiones /dev/sd\?`
+                        local strParticiones=`formatearStringYAD $particionesDisponibles`
+
+                        local seleccion=$(yad --form \
+                                        --title="Formulario Montar partición" \
+                                        --text="¿Qué partición quieres montar?" \
+                                        --center \
+                                        --buttons-layout=spread \
+                                        --field="Partición: ":CB \
+                                        --field="Punto montaje" \
+                                        "${strParticiones}" '/mnt')
+                        ans=$?
+                        if [ $ans -eq 0 ]
+                            then
+                                IFS="|" read -r -a array <<< "$seleccion"
+                                if [ $seleccion != "" ] #Se ha selecionado una partición
+                                    then
+                                        automontar ${array[0]} ${array[1]}
+                                    else
+                                        menuGestionarDisco
+                                fi
+                            else
+                                ./menu.sh
+                        fi
                     ;;
                 *)
                     echo "Unexpected"

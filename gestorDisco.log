@@ -4,3 +4,5 @@ Error montar:sdb1:/mnt:08/02/2022
 Desmontar:/dev/sdb1:08/02/2022
 Montar:sdb1:/mnt:08/02/2022
 Desmontar:/dev/sdb1:08/02/2022
+Error montar:sdb1:/mnt:10/02/2022
+Desmontar:/dev/sdb1:10/02/2022
