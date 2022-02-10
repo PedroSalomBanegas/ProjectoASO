@@ -139,10 +139,10 @@ function eliminarParticion() {
         posGuardar=`expr index "$nuevoString" "|"`
         let posGuardar=posGuardar-1
         particion=`expr substr "$nuevoString" 1 $posGuardar`
-        if [ $particion != "TRUE" ]
+        if [ "$particion" != "TRUE" ]
             then
                 echo "EliminarParticion:${particion}:${fecha}" >> formParticion.log
-                device=${particion::-1}
+                device=${particion:: -1}
                 posNum=${particion: -1}
                 echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
             fi
@@ -170,11 +170,4 @@ function checklist() {
             prueba=`echo "$string" | cut -d" " -f${cont}`
         done
         echo $stringTotal
-}
-
-function mkfsBetter () {
-    #Autor: Jaime
-    formato=$1
-    particion=$2
-    sudo mkfs.$1 $2
 }

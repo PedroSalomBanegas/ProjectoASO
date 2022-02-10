@@ -16,7 +16,45 @@ part=$(yad --form \
                 --field="Gráfico espacio utilizado":CHK )
                 
                 ans=$?
-                echo ${part}
+                cont=1
+                check=`echo $part | cut -d"|" -f${cont}`
+                disco=$check
+                col=0
+                while [ "$check" != "" ]
+                    do
+                        let cont=cont+1
+                        check=`echo $part | cut -d"|" -f${cont}`
+                        if [ "TRUE" = "$check" ]
+                            then
+                                case $cont in
+                                            "2")
+                                            let col=col+1
+                                                echo "Particiones"
+                                            ;;
+                                            "3")
+                                            let col=col+1
+                                                echo "File System"
+                                            ;;
+                                            "4")
+                                            let col=col+1
+                                                echo "Espacio total"
+                                            ;;
+                                            "5")
+                                            let col=col+1
+                                                echo "Espacio libre"
+                                            ;;
+                                            "6")
+                                            let col=col+1
+                                            echo "Numero columnas "$col
+                                                echo "Gráfico"
+                                            ;;
+                                            *)
+                                                echo "Unexpected"
+                                            ;;
+                                esac
+                        fi
+                    done
+
 #particiones con cut y ls
 #file system --> fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
 #Espacio total --> lsblk /dev/sdb
