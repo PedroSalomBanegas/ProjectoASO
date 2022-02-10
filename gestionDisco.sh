@@ -70,6 +70,23 @@ function automontar() {
     # -- Crear entrada en los logs y comprobar existencia en fstab (si existe no se escribe sobre el fstab)-- 
 }
 
+function quitarAutomontar() {
+    local existencia=`particionExisteFstab $1`
+
+    if [ $existencia = "true" ]
+        then
+            echo $1
+            echo true
+            # -- BORRAR ENTRADA --
+            # -- VOLVER AL MENÚ menuGestionarDisco --
+        else
+            echo $1
+            echo false
+            # -- MOSTRAR MENSAJE DE ERROR --
+            # -- VOLVER AL MENÚ menuGestionarDisco --
+    fi
+}
+
 function ventanaSelecionarParticion() {
     local particiones=`obtenerParticiones $1`
     local strParticiones=`formatearStringListaYAD $particiones`
@@ -113,7 +130,7 @@ function menuGestionarDisco(){
                     --text="GESTIONAR DISCO" \
                     --tree \
                     --column="Selecciona una opción:" \
-                        "Montar Disco" "Desmontar" "Automontaje")
+                        "Montar Disco" "Desmontar" "Automontaje" "Eliminar Automontaje")
 
     ans=$?
     if [ $ans -eq 0 ]
@@ -179,6 +196,28 @@ function menuGestionarDisco(){
                             else
                                 ./menu.sh
                         fi
+                    ;;
+                "Eliminar Automontaje")
+                        local particiones=`obtenerParticiones /dev/sd\?`
+                        local strParticiones=`formatearStringListaYAD $particiones`
+
+                        seleccion=$(yad --list \
+                                    --title="MENU" \
+                                    --height=220 \
+                                    --width=150 \
+                                    --button=Salir:1 \
+                                    --button=Seleccionar:0 \
+                                    --center \
+                                    --buttons-layout=spread \
+                                    --text-align=center \
+                                    --text="Partición a desmontar" \
+                                    --tree \
+                                    --column="Selecciona una opción:" \
+                                        ${strParticiones})
+
+                        ans=$? #respuesta del usuario
+                        seleccion=${seleccion::-1} #Quita el | del final
+                        quitarAutomontar $seleccion
                     ;;
                 *)
                     echo "Unexpected"

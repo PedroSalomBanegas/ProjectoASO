@@ -82,7 +82,7 @@ then
                 --title="MENU" \
                 --center \
                 --field="File System":CB \
-                'ext2!ext4'\
+                'ext3!ext4'\
                 --field="Partición a formatear":CB \
                 ${yadMKFS} )
                 ans=$?
@@ -90,7 +90,7 @@ then
                 then  
                     echo ${formateo} > test.txt 
                     seleccion=`sed 's/|/ /g' test.txt` #intercambia | por " "
-                    echo -e "s\n" | sudo mkfs.$seleccion
+                    mkfsBetter $seleccion
                     rm test.txt
                     fileSys=`echo "$seleccion" | cut -d" " -f1` 
                     par=`echo "$seleccion" | cut -d" " -f2` 

@@ -15,14 +15,3 @@ Formateo:ext4,/dev/sdb2:08/02/2022
 Formateo:ext4,/dev/sdb2:08/02/2022
 Formateo:ext4,/dev/sdb2:08/02/2022
 Formateo:ext3,/dev/sdb2:08/02/2022
-Formateo:ext3,/dev/sdb2:10/02/2022
-Formateo:ext3,/dev/sdb2:10/02/2022
-Formateo:ext4,/dev/sdb2:10/02/2022
-Formateo:ext4,/dev/sdb2:10/02/2022
-Formateo:ext2,/dev/sdb2:10/02/2022
-Formateo:ext2,/dev/sdb2:10/02/2022
-EliminarParticion:/dev/sdb2:10/02/2022
-EliminarParticion::10/02/2022
-AñadirParticion:/dev/sdb:10/02/2022
-EliminarParticion:/dev/sdb2:10/02/2022
-EliminarParticion::10/02/2022

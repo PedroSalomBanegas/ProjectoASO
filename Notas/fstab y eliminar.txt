@@ -9,3 +9,7 @@ Nota: Si no se elimina la entrada del fstab cuando se borra una partición el si
 sed '/particion/' ./fstab
 
     - EJ: sed '/sdb1/d' ./backup
+
+-- Recoger particiones existented en fstab --
+
+cat /etc/fstab | grep "/dev/sd" | grep -v "#"
