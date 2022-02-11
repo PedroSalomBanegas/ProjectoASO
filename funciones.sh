@@ -142,7 +142,7 @@ function eliminarParticion() {
         if [ "$particion" != "TRUE" ]
             then
                 echo "EliminarParticion:${particion}:${fecha}" >> formParticion.log
-                device=${particion:: -1}
+                device=${particion::\-1}
                 posNum=${particion: -1}
                 echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
             fi
@@ -171,3 +171,10 @@ function checklist() {
         done
         echo $stringTotal
 }
+
+function contParam() {
+    #Autor: Jaime
+    num=$#
+    let num=num-1
+    echo $num            
+}       

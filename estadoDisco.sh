@@ -1,5 +1,23 @@
 . funciones.sh
 
+seleccion=$(yad --list \
+                 --title="MENU" \
+                 --height=220 \
+                 --width=200 \
+                 --button=Salir:1 \
+                 --center \
+                 --buttons-layout=spread \
+                 --text-align=center \
+                 --text="INFO" \
+                 --tree \
+                 --column="Particiones" \
+                 --column="File System" \
+                 --column="Espacio total" \
+                 --column="Gráfico espacio utilizado" \
+                    sda1 ext2 0% XXXX00000 sda5 ext4 60% XXXX00000 sdb1 ext2 30% XXXX00000)
+                
+               
+
 part=$(yad --form \
                 --height=220 \
                 --width=150 \
@@ -16,44 +34,41 @@ part=$(yad --form \
                 --field="Gráfico espacio utilizado":CHK )
                 
                 ans=$?
-                cont=1
-                check=`echo $part | cut -d"|" -f${cont}`
-                disco=$check
-                col=0
-                while [ "$check" != "" ]
+                IFS="|" read -r -a array <<< "$part"
+                disco=${array[0]}
+                cont=0
+                string=""
+              
+            
+                valor=""
+                numParticiones=`contParam ls $disco?`
+
+                while [ $cont -lt $numParticiones ]
                     do
                         let cont=cont+1
-                        check=`echo $part | cut -d"|" -f${cont}`
-                        if [ "TRUE" = "$check" ]
+                        if [ ${array[1]} = "TRUE" ]
                             then
-                                case $cont in
-                                            "2")
-                                            let col=col+1
-                                                echo "Particiones"
-                                            ;;
-                                            "3")
-                                            let col=col+1
-                                                echo "File System"
-                                            ;;
-                                            "4")
-                                            let col=col+1
-                                                echo "Espacio total"
-                                            ;;
-                                            "5")
-                                            let col=col+1
-                                                echo "Espacio libre"
-                                            ;;
-                                            "6")
-                                            let col=col+1
-                                            echo "Numero columnas "$col
-                                                echo "Gráfico"
-                                            ;;
-                                            *)
-                                                echo "Unexpected"
-                                            ;;
-                                esac
+                                valor=`ls $disco? | cut -d" " -f${cont}`
+                                echo $valor
                         fi
+
+                        if [ ${array[2]} = "TRUE" ]
+                            then
+                                part=${valor: -4} #recoge las ultimas 4 letras
+                                echo $part
+                                fileSystem=`sudo lsblk -f | grep "$part" | cut -d" " -f2`
+                                echo $fileSystem
+                                if [ -z fileSystem ]
+                                    then
+                                        fileStr="sinFormato"
+                                    else
+                                        fileStr=$fileSystem
+                                fi
+
+                        fi
+                        string="$string $valor $fileStr"
                     done
+                    echo $string
 
 #particiones con cut y ls
 #file system --> fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
