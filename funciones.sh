@@ -123,10 +123,9 @@ function añadirParticion() {
     echo -e "n\n${tipo}\n\n\n+${tamano}\nw\n" | sudo fdisk ${nombrePar}
 }
 
-function eliminarParticion() {
+function eliminarParticion2() {
     #Autor: Jaime
     string=$*
-    fecha=`date +%d/%m/%Y`
     long=${#string} #recojo la longitud
     #echo $*
     pos=`expr index "$string" "|"`
@@ -139,15 +138,34 @@ function eliminarParticion() {
         posGuardar=`expr index "$nuevoString" "|"`
         let posGuardar=posGuardar-1
         particion=`expr substr "$nuevoString" 1 $posGuardar`
-        if [ "$particion" != "TRUE" ]
+        echo $particion
+        if [ $particion = "/dev/*" ]
             then
-                echo "EliminarParticion:${particion}:${fecha}" >> formParticion.log
-                device=${particion::\-1}
-                posNum=${particion: -1}
-                echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
+                echo "-->"$particion
+                #echo "EliminarParticion:${particion}:${fecha}" >> formParticion.log
+                #device=${particion::\-1}
+                #posNum=${particion: -1}
+                #echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
             fi
         string=$nuevoString
         long=${#string}
+        done
+}
+
+function eliminarParticion() {
+    #Autor: Jaime
+    string=$*
+    fecha=`date +%d/%m/%Y`
+    IFS="|" read -r -a array <<< "$string"
+    for str in ${array[@]}
+        do
+            if [ $str != "TRUE" ]
+                then
+                    echo "EliminarParticion:${str}:${fecha}" >> formParticion.log
+                    device=${str:: -1}
+                    posNum=${str: -1}
+                    echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
+            fi
         done
 }
 
