@@ -64,21 +64,68 @@ function automontar() {
     local nombreParticion=`echo $1 | cut -d"/" -f3`
     local fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
     local rutaMontaje=$2
+    local fecha=`date +%d/%m/%Y`
 
-    echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab
+    local existencia=`particionExisteFstab ${rutaParticion}`
+
+    if [ $existencia = "false" ] #Si no existe una entrada en fstab
+        then
+            echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab
+            
+            texto="¡Se ha montado ${nombreParticion} correctamente!"
+            yad --title="Automontaje Correcto"  \
+                --image=gtk-info \
+                --width=250 \
+                --height=80 \
+                --button=Continuar:0 \
+                --center \
+                --text-align=center \
+                --text="${texto}"
+
+            echo "Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log
+        else
+            echo "Error Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log
+            
+    fi
+
     
+
     # -- Crear entrada en los logs y comprobar existencia en fstab (si existe no se escribe sobre el fstab)-- 
 }
 
 function quitarAutomontar() {
     local existencia=`particionExisteFstab $1`
+    local nombreParticion=`echo $1 | cut -d"/" -f3`
+    local fecha=`date +%d/%m/%Y`
 
     if [ $existencia = "true" ]
         then
-            echo $1
-            echo true
-            # -- BORRAR ENTRADA --
-            # -- VOLVER AL MENÚ menuGestionarDisco --
+            sed "/$nombreParticion/d" "/etc/fstab" > $$.tmp
+            local res=$? 
+            cat $$.tmp > /etc/fstab #No funciona redirecionando directamente
+            rm $$.tmp #Eliminar archivo temporal
+
+            if [ $res -eq 0 ] #No funciona el condicional
+                then
+
+                    texto="Automontaje borrado!"
+                    yad --title="Automontaje borrado sobre $nombreParticion correctamente"  \
+                        --image=gtk-info \
+                        --width=250 \
+                        --height=80 \
+                        --button=Continuar:0 \
+                        --center \
+                        --text-align=center \
+                        --text="${texto}"
+
+                    echo "autmontaje borrado correctamente"
+                    echo "Automontar eliminado:$1:${fecha}" >> gestorDisco.log
+                    menuGestionarDisco
+                else
+                    echo "error, no se ha podido borrar"
+                    echo "Error eliminar Automontar:$1:${fecha}" >> gestorDisco.log
+                    ./menu.sh
+            fi
         else
             echo $1
             echo false

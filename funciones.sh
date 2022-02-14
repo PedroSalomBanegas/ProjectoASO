@@ -76,6 +76,16 @@ function ventanaSelecionarDisco() {
 
 }
 
+function particionExisteFstab() {
+    local existe=`cat /etc/fstab | grep -v "#" | grep "$1"`
+    if [ "$existe" != "" ]
+        then
+            echo "true"
+        else
+            echo "false"
+    fi
+}
+
 function formatearStringYAD(){
     #Autor: Pedro
     local array=($@) #Recoger un array desde un parámetro
