@@ -29,3 +29,5 @@ AñadirParticion:/dev/sdb:13/02/2022
 AñadirParticion:/dev/sdb:13/02/2022
 EliminarParticion:/dev/sdb2:13/02/2022
 EliminarParticion:/dev/sdb3:13/02/2022
+AñadirParticion:/dev/sdb:14/02/2022
+AñadirParticion:/dev/sdb:14/02/2022

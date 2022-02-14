@@ -199,10 +199,4 @@ function checklist() {
         done
         echo $stringTotal
 }
-
-function contParam() {
-    #Autor: Jaime
-    num=$#
-    let num=num-1
-    echo $num            
-}       
+     
