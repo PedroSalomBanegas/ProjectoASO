@@ -25,7 +25,7 @@ then
                 ./formParticion.sh
                 ;;
             "Estado de discos")
-                echo "Estado"
+                ./estadoDisco.sh
                 ;;
             "Estadísticas de uso")
                 echo "Estadísticas"

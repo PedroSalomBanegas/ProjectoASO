@@ -16,13 +16,16 @@ part=$(yad --form \
                 --field="Gráfico espacio utilizado":CHK )
                 
                 ans=$?
+if [ $ans -eq 0 ]
+    then
+                
                 IFS="|" read -r -a array <<< "$part"
                 disco=${array[0]}
                 cont=0
                 string=""
                 column=""
                 valor=""
-                numParticiones=`contParam ls $disco?`
+                numParticiones=`ls $disco? | wc -l`
                 width=0
 
                 while [ $cont -lt $numParticiones ]
@@ -94,18 +97,24 @@ part=$(yad --form \
                         column="$column --column="EspacioEnUso""
                 fi
                 
-seleccion=$(yad --list \
-                 --title="MENU" \
-                 --height=225 \
-                 --width=$width \
-                 --button=Salir:1 \
-                 --center \
-                 --buttons-layout=spread \
-                 --text-align=center \
-                 --text="INFO" \
-                 --tree \
-                    $column \
-                    $string )
+
+
+                seleccion=$(yad --list \
+                                    --title="MENU" \
+                                    --height=225 \
+                                    --width=$width \
+                                    --button=Salir:1 \
+                                    --center \
+                                    --buttons-layout=spread \
+                                    --text-align=center \
+                                    --text="INFO" \
+                                    --tree \
+                                        $column \
+                                        $string )
+    else
+        ./menu.sh
+    fi
+
 
 #particiones con cut y ls
 #file system --> fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
