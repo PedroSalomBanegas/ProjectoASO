@@ -71,6 +71,7 @@ function automontar() {
     if [ $existencia = "false" ] #Si no existe una entrada en fstab
         then
             echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab
+            sudo mount -a
             
             texto="¡Se ha montado ${nombreParticion} correctamente!"
             yad --title="Automontaje Correcto"  \
@@ -83,12 +84,11 @@ function automontar() {
                 --text="${texto}"
 
             echo "Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log
+            menuGestionarDisco
         else
             echo "Error Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log
-            
+            ./menu.sh
     fi
-
-    
 
     # -- Crear entrada en los logs y comprobar existencia en fstab (si existe no se escribe sobre el fstab)-- 
 }
@@ -100,16 +100,16 @@ function quitarAutomontar() {
 
     if [ $existencia = "true" ]
         then
-            sed "/$nombreParticion/d" "/etc/fstab" > $$.tmp
-            local res=$? 
-            cat $$.tmp > /etc/fstab #No funciona redirecionando directamente
+            sed "/$nombreParticion/d" "/etc/fstab" > $$.tmp #No funciona redirecionando directamente a fstab
+            local resultado=$?
+            cat $$.tmp > /etc/fstab 
             rm $$.tmp #Eliminar archivo temporal
 
-            if [ $res -eq 0 ] #No funciona el condicional
+            if [ $resultado -eq 0 ]
                 then
 
-                    texto="Automontaje borrado!"
-                    yad --title="Automontaje borrado sobre $nombreParticion correctamente"  \
+                    texto="Automontaje borrado sobre $nombreParticion correctamente"
+                    yad --title="Automontaje borrado!"  \
                         --image=gtk-info \
                         --width=250 \
                         --height=80 \
@@ -118,7 +118,6 @@ function quitarAutomontar() {
                         --text-align=center \
                         --text="${texto}"
 
-                    echo "autmontaje borrado correctamente"
                     echo "Automontar eliminado:$1:${fecha}" >> gestorDisco.log
                     menuGestionarDisco
                 else
@@ -129,8 +128,16 @@ function quitarAutomontar() {
         else
             echo $1
             echo false
-            # -- MOSTRAR MENSAJE DE ERROR --
-            # -- VOLVER AL MENÚ menuGestionarDisco --
+            texto="No existe una entrada con $nombreParticion"
+            yad --title="Error eliminar entrada" \
+                --image=gtk-info \
+                --width=250 \
+                --height=80 \
+                --button=Continuar:0 \
+                --center \
+                --text-align=center \
+                --text="${texto}"
+            ./menu.sh
     fi
 }
 
