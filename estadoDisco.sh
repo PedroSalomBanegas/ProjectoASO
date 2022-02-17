@@ -31,16 +31,19 @@ if [ $ans -eq 0 ]
                 while [ $cont -lt $numParticiones ]
                     do
                         let cont=cont+1
+                        lista=`ls $disco?`
+                        valor=`echo $lista | cut -d" " -f${cont}`
+                        part=${valor: -4} #recoge las ultimas 4 letras
+                        fileSystem=`sudo lsblk -f | grep "$part" | cut -d" " -f2`
+
                         if [ ${array[1]} = "TRUE" ]
                             then
-                                lista=`ls $disco?`
-                                valor=`echo $lista | cut -d" " -f${cont}`
+                                partic=$valor
                         fi
 
                         if [ ${array[2]} = "TRUE" ]
                             then
-                                part=${valor: -4} #recoge las ultimas 4 letras
-                                fileSystem=`sudo lsblk -f | grep "$part" | cut -d" " -f2`
+                                
                                 if [ -z $fileSystem ]
                                     then
                                         fileStr="sinFormato"
@@ -51,7 +54,6 @@ if [ $ans -eq 0 ]
 
                         if [ ${array[3]} = "TRUE" ]
                             then
-                                part=${valor: -4} #recoge las ultimas 4 letras
                                 espacioTotal=`sudo lsblk $disco | grep "$part" | awk '{print $4}'`
                                 #awk no esta documentado en la 2º entrega
                                 #puede hacer print de una linea especificando parámetros
@@ -60,17 +62,21 @@ if [ $ans -eq 0 ]
 
                         if [ ${array[4]} = "TRUE" ]
                             then
-                                part=${valor: -4} #recoge las ultimas 4 letras
                                 espacioUso=`sudo df $valor | grep "$part" | awk '{print $5}'`
-                                if [ -z $fileSystem ]
+                                if [ -z $espacioUso ]
                                     then
-                                        uso="X"
+                                        if [ -z $fileSystem ] #un poco chapuza pero sdb da errores raros
+                                            then
+                                                uso="X"
+                                            else
+                                                uso="0%"
+                                        fi
                                     else
                                         uso=$espacioUso
                                 fi
                                 
                         fi
-                        string="$string $valor $fileStr $espacioTotal $uso"
+                        string="$string $partic $fileStr $espacioTotal $uso"
                     done
 
                 if [ ${array[1]} = "TRUE" ]
