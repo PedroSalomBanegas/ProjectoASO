@@ -22,11 +22,11 @@ function montarDisco() {
             --text-align=center \
             --text="${texto}"
 
-            echo "Montar:${nombreParticion}:${montaje}:${fecha}" >> gestorDisco.log
+            echo "Montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
         else
             echo "No se ha podido montar"
-            echo "Error montar:${nombreParticion}:${montaje}:${fecha}" >> gestorDisco.log
+            echo "Error_montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -50,11 +50,11 @@ function desmontarDisco() {
             --text="${texto}"
 
             local fecha=`date +%d/%m/%Y`
-            echo "Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log
+            echo "Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log #entrada log
 
             menuGestionarDisco
         else
-            echo "Error montar:${rutaParticion}:${fecha}" >> gestorDisco.log
+            echo "Error_Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -70,7 +70,7 @@ function automontar() {
 
     if [ $existencia = "false" ] #Si no existe una entrada en fstab
         then
-            echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab
+            echo $rutaParticion $rutaMontaje $fileSystem defaults 0 3 >> /etc/fstab # Escribir nueva entrada a fstab
             sudo mount -a
             
             texto="¡Se ha montado ${nombreParticion} correctamente!"
@@ -83,14 +83,12 @@ function automontar() {
                 --text-align=center \
                 --text="${texto}"
 
-            echo "Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log
+            echo "Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
         else
-            echo "Error Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log
+            echo "Error_Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log #entrada log
             ./menu.sh
     fi
-
-    # -- Crear entrada en los logs y comprobar existencia en fstab (si existe no se escribe sobre el fstab)-- 
 }
 
 function quitarAutomontar() {
@@ -118,11 +116,11 @@ function quitarAutomontar() {
                         --text-align=center \
                         --text="${texto}"
 
-                    echo "Automontar eliminado:$1:${fecha}" >> gestorDisco.log
+                    echo "Automontar_eliminado:$1:${fecha}" >> gestorDisco.log #entrada log
                     menuGestionarDisco
                 else
                     echo "error, no se ha podido borrar"
-                    echo "Error eliminar Automontar:$1:${fecha}" >> gestorDisco.log
+                    echo "Error_eliminar_Automontar:$1:${fecha}" >> gestorDisco.log #entrada log
                     ./menu.sh
             fi
         else

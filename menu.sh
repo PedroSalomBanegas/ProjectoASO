@@ -16,8 +16,6 @@ if [ $ans -eq 0 ]
 then
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
-    #NO SE PORQUE SE AÑADE UNA " | " EN $OPCION
-    #CAMBIAR ECHOS POR LOS NOMBRES DEL LOS SCRIPTS
             "Gestionar disco")
                 ./gestionDisco.sh
                 ;;
@@ -28,7 +26,7 @@ then
                 ./estadoDisco.sh
                 ;;
             "Estadísticas de uso")
-                echo "Estadísticas"
+                ./estadisticaUso.sh
                 ;;
             "Ayuda")
                 echo "Ayuda"
