@@ -1,0 +1,5 @@
+sed 's/(carácteres)//g'
+
+-- Los paréntesis no se ponen!!
+
+-- Algunos carácteres se necesitan escapar, EJ: \/ --> /
