@@ -1,7 +1,9 @@
 . funciones.sh
 
+disco=`ventanaSelecionarDisco`
+
 opcion=$(yad --list \
-                 --title="MENU" \
+                 --title=$disco \
                  --height=220 \
                  --width=150 \
                  --button=Salir:1 \
@@ -18,23 +20,21 @@ if [ $ans -eq 0 ]
 then
     lista=`discosConectados`
     listaYAD=`formatearStringYAD $lista`
-    listaMKFS=`obtenerParticiones /dev/sd\?`
+    listaMKFS=`obtenerParticiones $disco`
     yadMKFS=`formatearStringYAD $listaMKFS`
-    listaCheck=`checklist`
+    listaCheck=`checklist $disco`
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
             "Añadir Particion")
                 part=$(yad --form \
-                --height=220 \
+                --height=100 \
                 --width=150 \
                 --button=Salir:1 \
                 --button=Seleccionar:0 \
-                --title="MENU" \
+                --title=$disco \
                 --center \
-                --field="Particiones":CB \
-                ${listaYAD} \
-                --field="Tamaño MB":CB \
-                '1000!2000!3000' \
+                --field="Tamaño MiB":TXT \
+                '' \
                 --field="Tipo":CB \
                 'Primaria!Extendida' )
                 ans=$?
@@ -42,9 +42,9 @@ then
                 then
                     echo ${part} > test.txt 
                     seleccion=`sed 's/|/ /g' test.txt`
-                    añadirParticion $seleccion
+                    añadirParticion $disco $seleccion
                     rm test.txt
-                    disco=`echo "$seleccion" | cut -d" " -f1` 
+                    #disco=`echo "$seleccion" | cut -d" " -f1` 
                     fecha=`date +%d/%m/%Y`
                     echo "AñadirParticion:${disco}:${fecha}" >> formParticion.log
                 else 
@@ -53,7 +53,7 @@ then
                 ;;
             "Eliminar Particion")
                 eliminar=$(yad --list \
-                --title="MENU" \
+                --title=$disco \
                 --height=200 \
                 --width=250 \
                 --center \
@@ -79,7 +79,7 @@ then
                 --width=150 \
                 --button=Salir:1 \
                 --button=Seleccionar:0 \
-                --title="MENU" \
+                --title=$disco \
                 --center \
                 --field="File System":CB \
                 'ext2!ext4'\

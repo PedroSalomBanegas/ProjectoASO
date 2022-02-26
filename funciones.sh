@@ -130,7 +130,7 @@ function añadirParticion() {
         else
             tipo="e"
         fi
-    echo -e "n\n${tipo}\n\n\n+${tamano}\nw\n" | sudo fdisk ${nombrePar}
+    echo -e "n\n${tipo}\n\n\n+${tamano}M\nw\n" | sudo fdisk ${nombrePar}
 }
 
 function eliminarParticion2() {
@@ -182,7 +182,7 @@ function eliminarParticion() {
 function checklist() {
     #Autor: Jaime
     #No implementado
-    string=`obtenerParticiones /dev/sd\?`
+    string=`obtenerParticiones $1`
     cont=1
     prueba=`echo "$string" | cut -d" " -f${cont}`
     while [ "$prueba" != "" ]
