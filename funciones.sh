@@ -181,7 +181,6 @@ function eliminarParticion() {
 
 function checklist() {
     #Autor: Jaime
-    #No implementado
     string=`obtenerParticiones $1`
     cont=1
     prueba=`echo "$string" | cut -d" " -f${cont}`
@@ -198,5 +197,28 @@ function checklist() {
             prueba=`echo "$string" | cut -d" " -f${cont}`
         done
         echo $stringTotal
+}
+
+function espacioRestante() {
+    #Autor: Jaime
+    #Esta funcion solo sirve con discos que pesan al menos 1GB y las particiones se ven como MB
+    local disco=$1
+    local part=${disco: -3}
+    local let cont=1
+    local espacioTotal=`lsblk $1 | grep "$part" | awk '{print $4}'`
+    local espacioTotal=`echo $espacioTotal | cut -d" " -f1`
+    local espacioTotal=${espacioTotal:: -1}
+    local espacios=`lsblk $1 | grep "$part$cont" | awk '{print $4}'`
+    local let espacioTotal=$espacioTotal\*1000
+    while [ "$espacios" != "" ]
+        do
+            espacios=${espacios:: -1}
+            let espacioTotal=$espacioTotal-$espacios
+            let cont=cont+1
+            local espacios=`lsblk $1 | grep "$part$cont" | awk '{print $4}'`
+        done
+        let espacioTotal=$espacioTotal/1000
+        echo $espacioTotal\G
+    
 }
      
