@@ -22,11 +22,11 @@ function montarDisco() {
             --text-align=center \
             --text="${texto}"
 
-            echo "Montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Montar:$1:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
         else
             echo "No se ha podido montar"
-            echo "Error_montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_montar:$1:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -102,6 +102,8 @@ function quitarAutomontar() {
             local resultado=$?
             cat $$.tmp > /etc/fstab 
             rm $$.tmp #Eliminar archivo temporal
+
+            # Añadir control de error
 
             if [ $resultado -eq 0 ]
                 then
@@ -182,14 +184,14 @@ function menuGestionarDisco(){
                     --text="GESTIONAR DISCO" \
                     --tree \
                     --column="Selecciona una opción:" \
-                        "Montar Disco" "Desmontar" "Automontaje" "Eliminar Automontaje")
+                        "Montar Partición" "Desmontar" "Automontaje" "Eliminar Automontaje")
 
     ans=$?
     if [ $ans -eq 0 ]
     then
         opcion=${opcion::-1} #Quita el | del final
         case $opcion in
-                "Montar Disco")
+                "Montar Partición")
                         discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
                         if [ ${discoSelecionado} != "return" ] #Se ha selecionado un disco
                             then
