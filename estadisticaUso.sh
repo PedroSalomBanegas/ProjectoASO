@@ -205,7 +205,7 @@ function generarFormularioLogs() {
                 --field="Filtrar por fecha:CB"  \
                 --field="Fecha Inicio":DT \
                 --field="Fecha Final":DT \
-                "gestorDisco.log!formParticion.log" "" "" "" "" "" "" "" "Todos!Correctos!Errores" "Desactivado!Entre!Igual")
+                "gestorDisco.log" "" "" "" "" "" "" "" "Todos!Correctos!Errores" "Desactivado!Entre!Igual")
     ans=$?
     if [ $ans -eq 0 ]
     then

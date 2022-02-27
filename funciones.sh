@@ -43,6 +43,8 @@ function ventanaMontarDiscoFormulario() {
     --title="Formulario Montar partición" \
     --text="¿Qué partición quieres montar?" \
     --center \
+    --button=Salir:1 \
+    --button=Seleccionar:0 \
     --buttons-layout=spread \
     --field="Partición: ":CB \
     --field="Punto montaje" \
@@ -60,6 +62,8 @@ function ventanaSelecionarDisco() {
             --title="Selección disco" \
             --text="Escoge el disco a operar" \
             --center \
+            --button=Volver:1 \
+            --button=Selecionar:0 \
             --buttons-layout=spread \
             --field="Disponibles: ":CB "$strDiscos")
     
@@ -185,16 +189,16 @@ function checklist() {
     string=`obtenerParticiones $1`
     cont=1
     prueba=`echo "$string" | cut -d" " -f${cont}`
+
     while [ "$prueba" != "" ]
         do
-            
             if [ -z "$stringTotal" ]
                 then
                     stringTotal="$cont $prueba"
                 else
                     stringTotal="$stringTotal $cont $prueba"
-                fi
-                let cont=cont+1
+            fi
+            let cont=cont+1
             prueba=`echo "$string" | cut -d" " -f${cont}`
         done
         echo $stringTotal

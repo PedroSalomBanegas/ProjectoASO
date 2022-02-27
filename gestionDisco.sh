@@ -22,11 +22,11 @@ function montarDisco() {
             --text-align=center \
             --text="${texto}"
 
-            echo "Montar:$1:${fecha}" >> gestorDisco.log #entrada log
+            echo "Montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
         else
             echo "No se ha podido montar"
-            echo "Error_montar:$1:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -34,6 +34,7 @@ function montarDisco() {
 function desmontarDisco() {
     local rutaParticion=$1
     local fecha=`date +%Y/%m/%d`
+    local nombreParticion=`echo $1 | cut -d"/" -f3`
 
     sudo umount ${rutaParticion}
 
@@ -50,11 +51,11 @@ function desmontarDisco() {
             --text="${texto}"
 
             local fecha=`date +%Y/%m/%d`
-            echo "Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Desmontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
 
             menuGestionarDisco
         else
-            echo "Error_Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_Desmontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -83,10 +84,10 @@ function automontar() {
                 --text-align=center \
                 --text="${texto}"
 
-            echo "Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             menuGestionarDisco
         else
-            echo "Error_Automontar:$1:${rutaMontaje}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
             ./menu.sh
     fi
 }
@@ -100,13 +101,11 @@ function quitarAutomontar() {
         then
             sed "/$nombreParticion/d" "/etc/fstab" > $$.tmp #No funciona redirecionando directamente a fstab
             local resultado=$?
-            cat $$.tmp > /etc/fstab 
-            rm $$.tmp #Eliminar archivo temporal
 
-            # Añadir control de error
-
-            if [ $resultado -eq 0 ]
+            if [ $resultado -eq 0 ] #control error, si sed no funciona no se reescribe fstab ( -- correción intermedia -- )
                 then
+                    cat $$.tmp > /etc/fstab 
+                    rm $$.tmp #Eliminar archivo temporal
 
                     texto="Automontaje borrado sobre $nombreParticion correctamente"
                     yad --title="Automontaje borrado!"  \
@@ -118,11 +117,11 @@ function quitarAutomontar() {
                         --text-align=center \
                         --text="${texto}"
 
-                    echo "Automontar_eliminado:$1:${fecha}" >> gestorDisco.log #entrada log
+                    echo "Automontar_eliminado:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
                     menuGestionarDisco
                 else
                     echo "error, no se ha podido borrar"
-                    echo "Error_eliminar_Automontar:$1:${fecha}" >> gestorDisco.log #entrada log
+                    echo "Error_eliminar_Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
                     ./menu.sh
             fi
         else
@@ -137,7 +136,10 @@ function quitarAutomontar() {
                 --center \
                 --text-align=center \
                 --text="${texto}"
-            ./menu.sh
+
+            echo "error, no se ha podido borrar"
+        echo "Error_eliminar_Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+                    ./menu.sh
     fi
 }
 
@@ -181,7 +183,7 @@ function menuGestionarDisco(){
                     --buttons-layout=spread \
                     --center \
                     --text-align=center \
-                    --text="GESTIONAR DISCO" \
+                    --text="GESTIONAR DISCO \n <span weight=\"bold\">Disco: ${discoSelecionado}</span>" \
                     --tree \
                     --column="Selecciona una opción:" \
                         "Montar Partición" "Desmontar" "Automontaje" "Eliminar Automontaje")
@@ -192,12 +194,12 @@ function menuGestionarDisco(){
         opcion=${opcion::-1} #Quita el | del final
         case $opcion in
                 "Montar Partición")
-                        discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
+                        #discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
                         if [ ${discoSelecionado} != "return" ] #Se ha selecionado un disco
                             then
                                 formulario=`ventanaMontarDiscoFormulario $discoSelecionado`
                                 
-                                if [ $? -eq 0 ] #El usuario no ha cerrado el formulario
+                                if [ ${formulario} != "" ] #El usuario no ha cerrado el formulario
                                     then
                                         IFS="|" read -r -a datos <<< "$formulario" #recoger los datos
                                         montarDisco ${datos[0]} ${datos[1]}
@@ -209,7 +211,7 @@ function menuGestionarDisco(){
                         fi
                     ;;
                 "Desmontar")
-                        discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
+                        #discoSelecionado=`ventanaSelecionarDisco` #Función que devolverá "discoSelecionado"
 
                         if [ ${discoSelecionado} != "return" ]
                             then
@@ -233,12 +235,14 @@ function menuGestionarDisco(){
                                         --title="Formulario automontaje" \
                                         --text="¿Qué partición quieres que se monte automáticamente?" \
                                         --center \
+                                        --button=Salir:1 \
+                                        --button=Seleccionar:0 \
                                         --buttons-layout=spread \
                                         --field="Partición: ":CB \
                                         --field="Punto montaje" \
                                         "${strParticiones}" '/mnt')
-                        ans=$?
-                        if [ $ans -eq 0 ]
+
+                        if [ $? -eq 0 ]
                             then
                                 IFS="|" read -r -a array <<< "$seleccion"
                                 if [ $seleccion != "" ] #Se ha selecionado una partición
@@ -281,5 +285,7 @@ function menuGestionarDisco(){
         ./menu.sh
     fi
 }
+
+discoSelecionado=`ventanaSelecionarDisco`
 
 menuGestionarDisco #Invocar interfaz

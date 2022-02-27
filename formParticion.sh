@@ -2,6 +2,8 @@
 
 disco=`ventanaSelecionarDisco`
 
+echo "prueba1"
+
 opcion=$(yad --list \
                  --title=$disco \
                  --height=220 \
@@ -16,13 +18,13 @@ opcion=$(yad --list \
                  --column="Selecciona una opción:" \
                     "Añadir Particion" "Eliminar Particion" "Formatear" )
 ans=$?
+echo $opcion
 if [ $ans -eq 0 ]
 then
     lista=`discosConectados`
     listaYAD=`formatearStringYAD $lista`
     listaMKFS=`obtenerParticiones $disco`
     yadMKFS=`formatearStringYAD $listaMKFS`
-    listaCheck=`checklist $disco`
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
             "Añadir Particion")
@@ -45,13 +47,15 @@ then
                     añadirParticion $disco $seleccion
                     rm test.txt
                     #disco=`echo "$seleccion" | cut -d" " -f1` 
-                    local fecha=`date +%Y/%m/%d`
-                    echo "AñadirParticion:${disco}:${fecha}" >> gestorDisco.log
+                    fecha=`date +%Y/%m/%d`
+                    nombreParticion=`echo $disco | cut -d"/" -f3`
+                    echo "AñadirParticion:${nombreParticion}:${fecha}" >> gestorDisco.log
                 else 
                     ./formParticion.sh
                 fi
                 ;;
             "Eliminar Particion")
+                listaCheck=`checklist $disco`
                 eliminar=$(yad --list \
                 --title=$disco \
                 --height=200 \
@@ -65,9 +69,12 @@ then
                 --column="Particiones del sistema" \
                 $listaCheck )
                 ans=$?
+                nombreParticion=`echo $disco | cut -d"/" -f3` 
                 if [ $ans -eq 0 ]
                 then  
                     eliminarParticion ${eliminar}
+                    fecha=`date +%Y/%m/%d`
+                    echo "Eliminar_Particion:${nombreParticion}:${fecha}" >> gestorDisco.log
                 else
                    
                     ./formParticion.sh
@@ -93,9 +100,10 @@ then
                     echo -e "s\n" | sudo mkfs.$seleccion
                     rm test.txt
                     fileSys=`echo "$seleccion" | cut -d" " -f1` 
-                    par=`echo "$seleccion" | cut -d" " -f2` 
-                    local fecha=`date +%Y/%m/%d`
-                    echo "Formateo:${par}:${fecha}" >> gestorDisco.log
+                    par=`echo "$seleccion" | cut -d" " -f2`
+                    nombreParticion=`echo $seleccion | cut -d"/" -f3` 
+                    fecha=`date +%Y/%m/%d`
+                    echo "Formateo:${nombreParticion}:${fecha}" >> gestorDisco.log
                 else
                     ./formParticion.sh
                 fi

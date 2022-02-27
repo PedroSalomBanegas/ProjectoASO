@@ -44,3 +44,7 @@ EliminarParticion:/dev/sdb2:26/02/2022
 EliminarParticion:/dev/sdb3:26/02/2022
 AñadirParticion:/dev/sdb:26/02/2022
 AñadirParticion:/dev/sdb:26/02/2022
+EliminarParticion:/dev/sdb2:27/02/2022
+EliminarParticion:/dev/sdb3:28/02/2022
+EliminarParticion:/dev/sdb3:28/02/2022
+EliminarParticion:/dev/sdb2:28/02/2022
