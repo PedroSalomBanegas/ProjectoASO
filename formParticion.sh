@@ -54,8 +54,8 @@ then
                     añadirParticion $disco $seleccion
                     rm test.txt
                     #disco=`echo "$seleccion" | cut -d" " -f1` 
-                    fecha=`date +%d/%m/%Y`
-                    echo "AñadirParticion:${disco}:${fecha}" >> formParticion.log
+                    local fecha=`date +%Y/%m/%d`
+                    echo "AñadirParticion:${disco}:${fecha}" >> gestorDisco.log
                 else 
                     ./formParticion.sh
                 fi
@@ -103,8 +103,8 @@ then
                     rm test.txt
                     fileSys=`echo "$seleccion" | cut -d" " -f1` 
                     par=`echo "$seleccion" | cut -d" " -f2` 
-                    fecha=`date +%d/%m/%Y`
-                    echo "Formateo:${fileSys},${par}:${fecha}" >> formParticion.log
+                    local fecha=`date +%Y/%m/%d`
+                    echo "Formateo:${par}:${fecha}" >> gestorDisco.log
                 else
                     ./formParticion.sh
                 fi

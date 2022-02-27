@@ -5,7 +5,7 @@ function montarDisco() {
     local fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
     local rutaParticion=$1
     local montaje=$2
-    local fecha=`date +%d/%m/%Y`
+    local fecha=`date +%Y/%m/%d`
     
     sudo mount -t $fileSystem $rutaParticion $montaje
 
@@ -33,7 +33,7 @@ function montarDisco() {
 
 function desmontarDisco() {
     local rutaParticion=$1
-    local fecha=`date +%d/%m/%Y`
+    local fecha=`date +%Y/%m/%d`
 
     sudo umount ${rutaParticion}
 
@@ -49,7 +49,7 @@ function desmontarDisco() {
             --text-align=center \
             --text="${texto}"
 
-            local fecha=`date +%d/%m/%Y`
+            local fecha=`date +%Y/%m/%d`
             echo "Desmontar:${rutaParticion}:${fecha}" >> gestorDisco.log #entrada log
 
             menuGestionarDisco
@@ -64,7 +64,7 @@ function automontar() {
     local nombreParticion=`echo $1 | cut -d"/" -f3`
     local fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
     local rutaMontaje=$2
-    local fecha=`date +%d/%m/%Y`
+    local fecha=`date +%Y/%m/%d`
 
     local existencia=`particionExisteFstab ${rutaParticion}`
 
@@ -94,7 +94,7 @@ function automontar() {
 function quitarAutomontar() {
     local existencia=`particionExisteFstab $1`
     local nombreParticion=`echo $1 | cut -d"/" -f3`
-    local fecha=`date +%d/%m/%Y`
+    local fecha=`date +%Y/%m/%d`
 
     if [ $existencia = "true" ]
         then

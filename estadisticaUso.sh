@@ -18,7 +18,6 @@ function mostrarLogs() {
     local filtroFecha=${datos[5]}
     local fechaInicial=${datos[6]}
     local fechaFinal=${datos[7]}
-    echo "$archivo - $evento - $particion - $fecha - $tipoEvento - $filtroFecha - $fechaUsuario"
 
     # -- GENERAR LOS CAMPOS --
     if [ $evento = 'TRUE' ]
@@ -97,8 +96,6 @@ function mostrarLogs() {
                  --tree \
                  ${listaCampos} \
                  ${resultado})
-                 
-    echo "botón = $?"
 
     if [ $? -eq 0 ]
         then
@@ -109,19 +106,34 @@ function mostrarLogs() {
 }
 
 function filtrarFecha() {
-    local inicial=$1
-    local final=$2
-    local tipoFiltro=$3
 
-    local dayInical=`echo $inicial | cut -d"/" -f1`
-    local monthInical=`echo $inicial | cut -d"/" -f2`
-    local yearInicial=`echo $inicial | cut -d"/" -f3`
-    local yearInicial=20${yearInicial} #Formatear el año para filtrar correctamente
+    if [ $# -eq 2 ]
+        then
+            local inicial=$1
+            local tipoFiltro=$2
 
-    local dayFinal=`echo $final | cut -d"/" -f1`
-    local monthFinal=`echo $final |cut -d"/" -f2`
-    local yearFinal=`echo $final | cut -d"/" -f3`
-    local yearFinal=20${yearFinal} #Formatear el año para filtrar correctamente
+            local dayInical=`echo $inicial | cut -d"/" -f1`
+            local monthInical=`echo $inicial | cut -d"/" -f2`
+            local yearInicial=`echo $inicial | cut -d"/" -f3`
+            local yearInicial=20${yearInicial} #Formatear el año para filtrar correctamente
+    elif [ $# -eq 3 ]
+        then
+            local inicial=$1
+            local final=$2
+            local tipoFiltro=$3
+
+            local dayInical=`echo $inicial | cut -d"/" -f1`
+            local monthInical=`echo $inicial | cut -d"/" -f2`
+            local yearInicial=`echo $inicial | cut -d"/" -f3`
+            local yearInicial=20${yearInicial} #Formatear el año para filtrar correctamente
+
+            local dayFinal=`echo $final | cut -d"/" -f1`
+            local monthFinal=`echo $final |cut -d"/" -f2`
+            local yearFinal=`echo $final | cut -d"/" -f3`
+            local yearFinal=20${yearFinal} #Formatear el año para filtrar correctamente
+    else
+        local tipoFiltro=$1
+    fi
 
     local dataLog=`cat gestorDisco.log`
 
@@ -130,32 +142,49 @@ function filtrarFecha() {
     # --------- Filtro para decisión fecha (Todas, igual, entre --> (hecho) ---------
     # -------------------------------------------------------------------------------
 
-    IFS=$'\n'
-    for str in $dataLog
-        do
-            local dataFilter=`echo "$str" | cut -d":" -f3 | sed 's/\///g'`
-            if [ $dataFilter -ge $yearInicial$monthInical$dayInical ]
-                then
-                    if [ -z $previousFilteredString ]
+    case $tipoFiltro in
+        "Entre")
+            IFS=$'\n'
+            for str in $dataLog
+                do
+                    local dataFilter=`echo "$str" | cut -d":" -f3 | sed 's/\///g'`
+                    if [ $dataFilter -ge $yearInicial$monthInical$dayInical ]
                         then
-                            local previousFilteredString="${str}"
-                        else
-                            local previousFilteredString="${previousFilteredString} ${str}"
+                            if [ -z $previousFilteredString ]
+                                then
+                                    local previousFilteredString="${str}"
+                                else
+                                    local previousFilteredString="${previousFilteredString} ${str}"
+                            fi
+                            
                     fi
-                    
-            fi
-        done
+                done
 
-    IFS=' '
-    for str in $previousFilteredString
-        do
-            local dataFilter=`echo "$str" | cut -d":" -f3 | sed 's/\///g'`
-            if [ $dataFilter -le $yearFinal$monthFinal$dayFinal ]
-                then
-                    echo $str >> filteredList.tmp
-            fi
-        done
-    echo $filteredString
+            IFS=' '
+            for str in $previousFilteredString
+                do
+                    local dataFilter=`echo "$str" | cut -d":" -f3 | sed 's/\///g'`
+                    if [ $dataFilter -le $yearFinal$monthFinal$dayFinal ]
+                        then
+                            echo $str >> filteredList.tmp
+                    fi
+                done
+            ;;
+        "Desactivado")
+                cat gestorDisco.log > filteredList.tmp
+            ;;
+        "Igual")
+            IFS=$'\n'
+            for str in $dataLog
+                do
+                    local dataFilter=`echo "$str" | cut -d":" -f3 | sed 's/\///g'`
+                    if [ $dataFilter -eq $yearInicial$monthInical$dayInical ]
+                        then
+                            echo $str >> filteredList.tmp
+                    fi
+                done
+            ;;
+    esac
 }
 
 function generarFormularioLogs() {
@@ -176,7 +205,7 @@ function generarFormularioLogs() {
                 --field="Filtrar por fecha:CB"  \
                 --field="Fecha Inicio":DT \
                 --field="Fecha Final":DT \
-                "gestorDisco.log!formParticion.log" "" "" "" "" "" "" "" "Todos!Correctos!Errores" "Desactivado!Entre!Diferente")
+                "gestorDisco.log!formParticion.log" "" "" "" "" "" "" "" "Todos!Correctos!Errores" "Desactivado!Entre!Igual")
     ans=$?
     if [ $ans -eq 0 ]
     then
