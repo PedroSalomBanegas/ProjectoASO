@@ -2,12 +2,6 @@
 
 disco=`ventanaSelecionarDisco`
 
-if [ "$disco" = "return" ]
-    then
-        ./menu.sh
-        exit
-fi
-
 opcion=$(yad --list \
                  --title=$disco \
                  --height=220 \
@@ -29,7 +23,6 @@ then
     listaMKFS=`obtenerParticiones $disco`
     yadMKFS=`formatearStringYAD $listaMKFS`
     listaCheck=`checklist $disco`
-    restante=`espacioRestante $disco`
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
             "Añadir Particion")
@@ -40,8 +33,6 @@ then
                 --button=Seleccionar:0 \
                 --title=$disco \
                 --center \
-                --field="Espacio Restante: $restante":LBL \
-                '' \
                 --field="Tamaño MiB":TXT \
                 '' \
                 --field="Tipo":CB \
