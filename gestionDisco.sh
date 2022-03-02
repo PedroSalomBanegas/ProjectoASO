@@ -186,7 +186,7 @@ function menuGestionarDisco(){
                     --text="GESTIONAR DISCO \n <span weight=\"bold\">Disco: ${discoSelecionado}</span>" \
                     --tree \
                     --column="Selecciona una opción:" \
-                        "Montar Partición" "Desmontar" "Automontaje" "Eliminar Automontaje")
+                        "Montar Partición" "Desmontar" "Automontaje" "Eliminar Automontaje" "Cambiar Disco")
 
     ans=$?
     if [ $ans -eq 0 ]
@@ -276,6 +276,10 @@ function menuGestionarDisco(){
                         ans=$? #respuesta del usuario
                         seleccion=${seleccion::-1} #Quita el | del final
                         quitarAutomontar $seleccion
+                    ;;
+                "Cambiar Disco")
+                    discoSelecionado=`ventanaSelecionarDisco`
+                    menuGestionarDisco
                     ;;
                 *)
                     echo "Unexpected"
