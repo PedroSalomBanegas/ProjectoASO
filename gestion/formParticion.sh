@@ -2,8 +2,14 @@
 function iniciarFormParticion() {
     disco=`ventanaSelecionarDisco`
 
+    if [ "$disco" = "return" ]
+    then
+        ./menu.sh
+        exit
+    fi
+
     opcion=$(yad --list \
-                    --title=$disco \
+                    --title=MENU \
                     --height=220 \
                     --width=150 \
                     --button=Salir:1 \
@@ -11,18 +17,18 @@ function iniciarFormParticion() {
                     --center \
                     --buttons-layout=spread \
                     --text-align=center \
-                    --text="Formatear y Particionar" \
+                    --text="Formatear y Particionar \n Disco: $disco" \
                     --tree \
                     --column="Selecciona una opción:" \
                         "Añadir Particion" "Eliminar Particion" "Formatear" )
     ans=$?
-    echo $opcion
     if [ $ans -eq 0 ]
     then
         lista=`discosConectados`
         listaYAD=`formatearStringYAD $lista`
         listaMKFS=`obtenerParticiones $disco`
         yadMKFS=`formatearStringYAD $listaMKFS`
+        restante=`espacioRestante $disco`
         opcion=${opcion::-1} #Quita el | del final
         case $opcion in
                 "Añadir Particion")
@@ -33,6 +39,8 @@ function iniciarFormParticion() {
                     --button=Seleccionar:0 \
                     --title=$disco \
                     --center \
+                    --field="Espacio Restante: $restante":LBL \
+                    '' \
                     --field="Tamaño MiB":TXT \
                     '' \
                     --field="Tipo":CB \
