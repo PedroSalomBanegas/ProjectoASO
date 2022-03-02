@@ -1,11 +1,12 @@
 . funciones/funciones.sh
 function iniciarFormParticion() {
+
     disco=`ventanaSelecionarDisco`
 
     echo "prueba1"
 
     opcion=$(yad --list \
-                    --title=$disco \
+                    --title=MENU \
                     --height=220 \
                     --width=150 \
                     --button=Salir:1 \
@@ -13,7 +14,7 @@ function iniciarFormParticion() {
                     --center \
                     --buttons-layout=spread \
                     --text-align=center \
-                    --text="Formatear y Particionar" \
+                    --text="Formatear y Particionar \n Disco: $disco" \
                     --tree \
                     --column="Selecciona una opción:" \
                         "Añadir Particion" "Eliminar Particion" "Formatear" )
@@ -51,19 +52,19 @@ function iniciarFormParticion() {
                         nombreParticion=`echo $disco | cut -d"/" -f3`
                         echo "AñadirParticion:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else 
-                        ./formParticion.sh
+                        iniciarFormParticion
                     fi
                     ;;
                 "Eliminar Particion")
                     listaCheck=`checklist $disco`
                     eliminar=$(yad --list \
-                    --title=$disco \
+                    --title=MENU \
                     --height=200 \
                     --width=250 \
                     --center \
                     --button=Salir:1 \
                     --button=Seleccionar:0 \
-                    --text="Selecciona particiones a eliminar:" \
+                    --text="Selecciona particiones a eliminar: \n Disco: $disco" \
                     --checklist \
                     --column="" \
                     --column="Particiones del sistema" \
@@ -76,8 +77,7 @@ function iniciarFormParticion() {
                         fecha=`date +%Y/%m/%d`
                         echo "Eliminar_Particion:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else
-                    
-                        ./formParticion.sh
+                        iniciarFormParticion
                     fi
                     ;; 
                 "Formatear")
@@ -86,7 +86,7 @@ function iniciarFormParticion() {
                     --width=150 \
                     --button=Salir:1 \
                     --button=Seleccionar:0 \
-                    --title=$disco \
+                    --title=Disco: $disco \
                     --center \
                     --field="File System":CB \
                     'ext2!ext4'\
@@ -105,7 +105,7 @@ function iniciarFormParticion() {
                         fecha=`date +%Y/%m/%d`
                         echo "Formateo:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else
-                        ./formParticion.sh
+                        iniciarFormParticion
                     fi
                     ;;   
                 *)

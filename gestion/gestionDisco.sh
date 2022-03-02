@@ -150,7 +150,7 @@ function quitarAutomontar() {
 }
 
 function ventanaSelecionarParticion() {
-    local particiones=`obtenerParticiones $1`
+    local particiones=`obtenerParticiones $disco`
     local strParticiones=`formatearStringListaYAD $particiones`
 
     seleccion=$(yad --list \
@@ -234,7 +234,7 @@ function menuGestionarDisco(){
                         fi
                     ;;
                 "Automontaje")
-                        local particionesDisponibles=`obtenerParticiones /dev/sd\?`
+                        local particionesDisponibles=`obtenerParticiones $disco`
                         local strParticiones=`formatearStringYAD $particionesDisponibles`
 
                         local seleccion=$(yad --form \
