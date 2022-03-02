@@ -215,6 +215,3 @@ function generarFormularioLogs() {
         ./menu.sh
     fi
 }
-
-generarFormularioLogs #Invocar formulario
-

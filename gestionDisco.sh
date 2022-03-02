@@ -1,5 +1,11 @@
 . funciones.sh
 
+function iniciarGestionDisco() {
+    discoSelecionado=`ventanaSelecionarDisco`
+
+    menuGestionarDisco #Invocar interfaz
+}
+
 function montarDisco() {
     local nombreParticion=`echo $1 | cut -d"/" -f3`
     local fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
@@ -289,7 +295,3 @@ function menuGestionarDisco(){
         ./menu.sh
     fi
 }
-
-discoSelecionado=`ventanaSelecionarDisco`
-
-menuGestionarDisco #Invocar interfaz

@@ -81,6 +81,7 @@ function ventanaSelecionarDisco() {
 }
 
 function particionExisteFstab() {
+    #Autor: Pedro
     local existe=`cat /etc/fstab | grep -v "#" | grep "$1"`
     if [ "$existe" != "" ]
         then

@@ -1,3 +1,8 @@
+. gestionDisco.sh
+. estadoDisco.sh
+. formParticion.sh
+. estadisticaUso.sh
+
 opcion=$(yad --list \
                  --title="MENU" \
                  --height=220 \
@@ -10,23 +15,23 @@ opcion=$(yad --list \
                  --text="MENU PRINCIPAL" \
                  --tree \
                  --column="Selecciona una opción:" \
-                    "Gestionar disco" "Formatear y Particionar" "Estado de discos" "Estadísticas de uso" "Ayuda")
+                    "Gestionar disco" "Formatear y Particionar" "Estado de discos" "Estadísticas de uso")
 ans=$?
 if [ $ans -eq 0 ]
 then
     opcion=${opcion::-1} #Quita el | del final
     case $opcion in
             "Gestionar disco")
-                ./gestionDisco.sh
+                iniciarGestionDisco
                 ;;
             "Formatear y Particionar")
-                ./formParticion.sh
+                iniciarFormParticion
                 ;;
             "Estado de discos")
-                ./estadoDisco.sh
+                iniciarEstadoDisco
                 ;;
             "Estadísticas de uso")
-                ./estadisticaUso.sh
+                generarFormularioLogs
                 ;;
             "Ayuda")
                 echo "Ayuda"
