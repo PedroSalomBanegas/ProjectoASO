@@ -1,6 +1,3 @@
-
-# --field=":LBL" \ --> Línea en blanco
-
 function mostrarLogs() {
 
     unset evento
@@ -107,7 +104,7 @@ function mostrarLogs() {
 
 function filtrarFecha() {
 
-    if [ $# -eq 2 ]
+    if [ $# -eq 2 ] #Se ha introducido 1 fecha
         then
             local inicial=$1
             local tipoFiltro=$2
@@ -116,7 +113,7 @@ function filtrarFecha() {
             local monthInical=`echo $inicial | cut -d"/" -f2`
             local yearInicial=`echo $inicial | cut -d"/" -f3`
             local yearInicial=20${yearInicial} #Formatear el año para filtrar correctamente
-    elif [ $# -eq 3 ]
+    elif [ $# -eq 3 ] #Se ha introducido 2 fecha
         then
             local inicial=$1
             local final=$2
@@ -131,16 +128,14 @@ function filtrarFecha() {
             local monthFinal=`echo $final |cut -d"/" -f2`
             local yearFinal=`echo $final | cut -d"/" -f3`
             local yearFinal=20${yearFinal} #Formatear el año para filtrar correctamente
-    else
+    else #No se han introducido fechas
         local tipoFiltro=$1
     fi
 
     local dataLog=`cat gestorDisco.log`
 
-    # ================================== PENDIENTE ==================================
-    # -------------------------------------------------------------------------------
-    # --------- Filtro para decisión fecha (Todas, igual, entre --> (hecho) ---------
-    # -------------------------------------------------------------------------------
+    
+    # --------- Filtro para decisión fecha (Todas, igual, entre) ---------
 
     case $tipoFiltro in
         "Entre")

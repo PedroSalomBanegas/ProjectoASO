@@ -234,7 +234,7 @@ function menuGestionarDisco(){
                         fi
                     ;;
                 "Automontaje")
-                        local particionesDisponibles=`obtenerParticiones /dev/sd\?`
+                        local particionesDisponibles=`obtenerParticiones ${discoSelecionado}`
                         local strParticiones=`formatearStringYAD $particionesDisponibles`
 
                         local seleccion=$(yad --form \
@@ -251,7 +251,7 @@ function menuGestionarDisco(){
                         if [ $? -eq 0 ]
                             then
                                 IFS="|" read -r -a array <<< "$seleccion"
-                                if [ $seleccion != "" ] #Se ha selecionado una partición
+                                if [ "$seleccion" != "" ] #Se ha selecionado una partición
                                     then
                                         automontar ${array[0]} ${array[1]}
                                     else
@@ -262,7 +262,7 @@ function menuGestionarDisco(){
                         fi
                     ;;
                 "Eliminar Automontaje")
-                        local particiones=`obtenerParticiones /dev/sd\?`
+                        local particiones=`obtenerParticiones ${discoSelecionado}`
                         local strParticiones=`formatearStringListaYAD $particiones`
 
                         seleccion=$(yad --list \
@@ -280,8 +280,14 @@ function menuGestionarDisco(){
                                         ${strParticiones})
 
                         ans=$? #respuesta del usuario
-                        seleccion=${seleccion::-1} #Quita el | del final
-                        quitarAutomontar $seleccion
+                        if [ "$seleccion" != "" ]
+                            then
+                                seleccion=${seleccion::-1} #Quita el | del final
+                                quitarAutomontar $seleccion
+                            else
+                                menuGestionarDisco
+                        fi
+
                     ;;
                 "Cambiar Disco")
                     discoSelecionado=`ventanaSelecionarDisco`

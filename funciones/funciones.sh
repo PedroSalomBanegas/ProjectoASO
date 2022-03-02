@@ -8,7 +8,6 @@ function discosConectados(){
 
     while [ ${i} -le ${totalDiscos} ]
         do
-            #cat discos | head -n$i | tail -n1
             listaDiscos+=(`cat discos | head -n$i | tail -n1`) #Añadir los discos al Array
             i=`expr $i + 1`
         done
@@ -25,7 +24,6 @@ function obtenerParticiones() {
 
     while [ ${i} -le ${totalParticiones} ]
         do
-            #cat discos | head -n$i | tail -n1
             listaParticiones+=(`cat particiones | head -n$i | tail -n1`) #Añadir los discos al Array
             i=`expr $i + 1`
         done
@@ -94,7 +92,6 @@ function particionExisteFstab() {
 function formatearStringYAD(){
     #Autor: Pedro
     local array=($@) #Recoger un array desde un parámetro
-    #echo ${array[@]}
     for str in "${array[@]}" #Formatear el array en una string aceptada por YAD
         do
             if [ -z ${stringConvertida} ]
@@ -204,4 +201,26 @@ function checklist() {
         done
         echo $stringTotal
 }
-     
+
+function espacioRestante() {
+    #Autor: Jaime
+    #Esta funcion solo sirve con discos que pesan al menos 1GB y las particiones se ven como MB
+    local disco=$1
+    local part=${disco: -3}
+    local let cont=1
+    local espacioTotal=`lsblk $1 | grep "$part" | awk '{print $4}'`
+    local espacioTotal=`echo $espacioTotal | cut -d" " -f1`
+    local espacioTotal=${espacioTotal:: -1}
+    local espacios=`lsblk $1 | grep "$part$cont" | awk '{print $4}'`
+    local let espacioTotal=$espacioTotal\*1000
+    while [ "$espacios" != "" ]
+        do
+            espacios=${espacios:: -1}
+            let espacioTotal=$espacioTotal-$espacios
+            let cont=cont+1
+            local espacios=`lsblk $1 | grep "$part$cont" | awk '{print $4}'`
+        done
+        let espacioTotal=$espacioTotal/1000
+        echo $espacioTotal\G
+    
+}

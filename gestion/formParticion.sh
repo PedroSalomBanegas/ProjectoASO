@@ -2,8 +2,6 @@
 function iniciarFormParticion() {
     disco=`ventanaSelecionarDisco`
 
-    echo "prueba1"
-
     opcion=$(yad --list \
                     --title=$disco \
                     --height=220 \
@@ -51,7 +49,7 @@ function iniciarFormParticion() {
                         nombreParticion=`echo $disco | cut -d"/" -f3`
                         echo "AñadirParticion:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else 
-                        ./formParticion.sh
+                        iniciarFormParticion
                     fi
                     ;;
                 "Eliminar Particion")
@@ -77,7 +75,7 @@ function iniciarFormParticion() {
                         echo "Eliminar_Particion:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else
                     
-                        ./formParticion.sh
+                        iniciarFormParticion
                     fi
                     ;; 
                 "Formatear")
@@ -105,7 +103,7 @@ function iniciarFormParticion() {
                         fecha=`date +%Y/%m/%d`
                         echo "Formateo:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else
-                        ./formParticion.sh
+                        iniciarFormParticion
                     fi
                     ;;   
                 *)
