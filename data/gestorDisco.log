@@ -72,3 +72,4 @@ Eliminar_Particion:sdb:2022/02/28
 AñadirParticion:sda:2022/02/28
 Formateo:sdb2:2022/02/28
 Eliminar_Particion:sdb:2022/02/28
+Error_montar:sdb3:2022/03/02
