@@ -1,4 +1,4 @@
-. funciones.sh
+. funciones/funciones.sh
 
 function iniciarEstadoDisco() {
     part=$(yad --form \
@@ -13,8 +13,7 @@ function iniciarEstadoDisco() {
                     --field="Particiones":CHK \
                     --field="File System":CHK \
                     --field="Espacio total":CHK \
-                    --field="Espacio en Uso":CHK \
-                    --field="Gráfico espacio utilizado":CHK )
+                    --field="Espacio en Uso":CHK )
                     
                     ans=$?
     if [ $ans -eq 0 ]
@@ -122,13 +121,3 @@ function iniciarEstadoDisco() {
             ./menu.sh
         fi
 }
-
-
-
-#particiones con cut y ls
-#file system --> fileSystem=`lsblk -f | grep "$nombreParticion" | cut -d" " -f2`
-#Espacio total --> lsblk /dev/sdb
-#Espacio libre --> df /dev/sda?
-
-#--column="Espacio total" \
-#--column="Gráfico espacio utilizado" \

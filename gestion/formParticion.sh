@@ -1,4 +1,4 @@
-. funciones.sh
+. funciones/funciones.sh
 function iniciarFormParticion() {
     disco=`ventanaSelecionarDisco`
 
@@ -49,7 +49,7 @@ function iniciarFormParticion() {
                         #disco=`echo "$seleccion" | cut -d" " -f1` 
                         fecha=`date +%Y/%m/%d`
                         nombreParticion=`echo $disco | cut -d"/" -f3`
-                        echo "AñadirParticion:${nombreParticion}:${fecha}" >> gestorDisco.log
+                        echo "AñadirParticion:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else 
                         ./formParticion.sh
                     fi
@@ -74,7 +74,7 @@ function iniciarFormParticion() {
                     then  
                         eliminarParticion ${eliminar}
                         fecha=`date +%Y/%m/%d`
-                        echo "Eliminar_Particion:${nombreParticion}:${fecha}" >> gestorDisco.log
+                        echo "Eliminar_Particion:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else
                     
                         ./formParticion.sh
@@ -103,7 +103,7 @@ function iniciarFormParticion() {
                         par=`echo "$seleccion" | cut -d" " -f2`
                         nombreParticion=`echo $seleccion | cut -d"/" -f3` 
                         fecha=`date +%Y/%m/%d`
-                        echo "Formateo:${nombreParticion}:${fecha}" >> gestorDisco.log
+                        echo "Formateo:${nombreParticion}:${fecha}" >> data/gestorDisco.log
                     else
                         ./formParticion.sh
                     fi

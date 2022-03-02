@@ -1,7 +1,7 @@
-. gestionDisco.sh
-. estadoDisco.sh
-. formParticion.sh
-. estadisticaUso.sh
+. gestion/gestionDisco.sh
+. info/estadoDisco.sh
+. gestion/formParticion.sh
+. info/estadisticaUso.sh
 
 opcion=$(yad --list \
                  --title="MENU" \
@@ -32,9 +32,6 @@ then
                 ;;
             "Estadísticas de uso")
                 generarFormularioLogs
-                ;;
-            "Ayuda")
-                echo "Ayuda"
                 ;;
             *)
                 echo "Unexpected"

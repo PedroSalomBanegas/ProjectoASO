@@ -1,4 +1,4 @@
-. funciones.sh
+. funciones/funciones.sh
 
 function iniciarGestionDisco() {
     discoSelecionado=`ventanaSelecionarDisco`
@@ -28,11 +28,11 @@ function montarDisco() {
             --text-align=center \
             --text="${texto}"
 
-            echo "Montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Montar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
             menuGestionarDisco
         else
             echo "No se ha podido montar"
-            echo "Error_montar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_montar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -57,11 +57,11 @@ function desmontarDisco() {
             --text="${texto}"
 
             local fecha=`date +%Y/%m/%d`
-            echo "Desmontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Desmontar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
 
             menuGestionarDisco
         else
-            echo "Error_Desmontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_Desmontar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
             menuGestionarDisco
     fi 
 }
@@ -90,10 +90,10 @@ function automontar() {
                 --text-align=center \
                 --text="${texto}"
 
-            echo "Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Automontar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
             menuGestionarDisco
         else
-            echo "Error_Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+            echo "Error_Automontar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
             ./menu.sh
     fi
 }
@@ -123,11 +123,11 @@ function quitarAutomontar() {
                         --text-align=center \
                         --text="${texto}"
 
-                    echo "Automontar_eliminado:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+                    echo "Automontar_eliminado:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
                     menuGestionarDisco
                 else
                     echo "error, no se ha podido borrar"
-                    echo "Error_eliminar_Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+                    echo "Error_eliminar_Automontar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
                     ./menu.sh
             fi
         else
@@ -144,7 +144,7 @@ function quitarAutomontar() {
                 --text="${texto}"
 
             echo "error, no se ha podido borrar"
-        echo "Error_eliminar_Automontar:${nombreParticion}:${fecha}" >> gestorDisco.log #entrada log
+        echo "Error_eliminar_Automontar:${nombreParticion}:${fecha}" >> data/gestorDisco.log #entrada log
                     ./menu.sh
     fi
 }
