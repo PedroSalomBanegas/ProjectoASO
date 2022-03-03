@@ -29,6 +29,7 @@ function iniciarEstadoDisco() {
                     width=0
 
                     while [ $cont -lt $numParticiones ]
+                    #Crea los datos necesarios según TRUE o FALSE
                         do
                             let cont=cont+1
                             lista=`ls $disco?`
@@ -79,6 +80,7 @@ function iniciarEstadoDisco() {
                             string="$string $partic $fileStr $espacioTotal $uso"
                         done
 
+                    #Crea las columnas necesarias y aumenta el tamaño
                     if [ ${array[1]} = "TRUE" ]
                         then
                             let width=width+125

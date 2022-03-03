@@ -124,6 +124,7 @@ function formatearStringListaYAD() {
 
 function añadirParticion() {
     #Autor: Jaime
+    #Recoger datos
     nombrePar=$1
     tamano=$2
     if [ $3 = "Primaria" ]
@@ -132,6 +133,7 @@ function añadirParticion() {
         else
             tipo="e"
         fi
+    #Crear partición
     echo -e "n\n${tipo}\n\n\n+${tamano}M\nw\n" | sudo fdisk ${nombrePar}
 }
 
@@ -173,9 +175,11 @@ function eliminarParticion() {
         do
             if [ $str != "TRUE" ]
                 then
+                    #Archivo log
                     echo "EliminarParticion:${str}:${fecha}" >> formParticion.log
-                    device=${str:: -1}
-                    posNum=${str: -1}
+                    #Datos para borrar la partición
+                    device=${str:: -1} #Elimina el último carácter
+                    posNum=${str: -1} #Recoge el último carácter
                     echo -e "d\n${posnum}\nw\n" | sudo fdisk $device
             fi
         done
@@ -183,7 +187,7 @@ function eliminarParticion() {
 
 function checklist() {
     #Autor: Jaime
-    #No implementado
+    #Crear checkbox en YAD
     string=`obtenerParticiones $1`
     cont=1
     prueba=`echo "$string" | cut -d" " -f${cont}`
@@ -205,6 +209,7 @@ function checklist() {
 function espacioRestante() {
     #Autor: Jaime
     #Esta funcion solo sirve con discos que pesan al menos 1GB y las particiones se ven como MB
+    #Recoge muchos datos
     local disco=$1
     local part=${disco: -3}
     local let cont=1
@@ -212,9 +217,11 @@ function espacioRestante() {
     local espacioTotal=`echo $espacioTotal | cut -d" " -f1`
     local espacioTotal=${espacioTotal:: -1}
     local espacios=`lsblk $1 | grep "$part$cont" | awk '{print $4}'`
+    #Pasa de GB a MB
     local let espacioTotal=$espacioTotal\*1000
     while [ "$espacios" != "" ]
         do
+            #Calcula el espacio restante en MB
             espacios=${espacios:: -1}
             let espacioTotal=$espacioTotal-$espacios
             let cont=cont+1
