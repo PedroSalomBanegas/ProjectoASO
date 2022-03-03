@@ -36,10 +36,6 @@ function mostrarLogs() {
 
     filtrarFecha $fechaInicial $fechaFinal $filtroFecha
 
-    #filteredString=`filtrarFecha $fechaInicial $fechaFinal $filtroFecha`
-    #echo $filteredString
-
-
     case $tipoEvento in
         "Todos")
             local datosFiltrados=`grep -a "" filteredList.tmp`
@@ -132,7 +128,7 @@ function filtrarFecha() {
         local tipoFiltro=$1
     fi
 
-    local dataLog=`cat gestorDisco.log`
+    local dataLog=`cat data/gestorDisco.log`
 
     
     # --------- Filtro para decisión fecha (Todas, igual, entre) ---------
